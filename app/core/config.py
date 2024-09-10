@@ -5,7 +5,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Setting(BaseSettings):
     app_name: str = "Awesome API"
-    admin_email: str = "default"
+    url_db_psql: str
+    url_db_mongo:str    
     model_config = SettingsConfigDict(env_file=".env")
 
 
@@ -17,6 +18,6 @@ app = APIRouter()
 def info():
     return{
         "app_name":setting.app_name,
-        "admin_email":setting.admin_email
-        #"items_per_user":setting.items_per_user
+        "url_psql": setting.url_db_psql,
+        "url_mongo": setting.url_db_mongo
     }

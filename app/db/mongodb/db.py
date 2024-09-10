@@ -1,1 +1,0 @@
-# mongodb+srv://javmolh:javimolina@cluster0.lkzcb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0

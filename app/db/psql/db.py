@@ -1,12 +1,13 @@
 from sqlalchemy import create_engine, inspect
+from core.config import Setting
 
-url = "javi"
+setting = Setting()
 
-variable = "Var"
+url_psql = setting.url_db_psql
 
 try:
 
-    engine = create_engine(url)
+    engine = create_engine(setting.url_db_psql)
 
     inspector = inspect(engine)
 
