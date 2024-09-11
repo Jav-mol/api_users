@@ -1,18 +1,15 @@
 from fastapi import FastAPI
-#from core.config import setting
-from db.psql.db import get_db_psql, setting
+from core.config import setting
+from db.mongodb import db
+from db.psql.db import get_db_psql 
 
-try:
+for i in get_db_psql():
+    print(i)
 
-    print(setting.url_db_psql.unicode_string())
-    print(type(setting.url_db_psql.unicode_string()))
-
-    for i in get_db_psql():
-        print(i)
-        print(type(i))
-        
-except Exception as e:
-    print(f"Error: {e}")
+#try:
+#    print(type(db.client))
+#except Exception as e:
+#    print(f"Error: {e}")
 #app = FastAPI()
 #app.include_router(app1)
 

@@ -3,15 +3,16 @@ from core.config import Setting
 
 setting = Setting()
 
-url = setting.url_db_psql.unicode_string()
+url = setting.url_db_psql
 engine = create_engine(url)
 
 def get_db_psql():
     connection = engine.connect()
     try:
         yield connection
-    except:
-        raise "error"
+    except Exception as e:
+        connection.rollback()
+        raise f"Error: {e}"
     finally:
         connection.close()
 
