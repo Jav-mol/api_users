@@ -1,10 +1,18 @@
 from fastapi import FastAPI
 from core.config import setting
-from db.mongodb import db
-from db.psql.db import get_db_psql 
+from db.mongodb.db import get_db_mongo
+#from db.psql.db import get_db_psql 
 
-for i in get_db_psql():
-    print(i)
+from pymongo import client_session 
+
+connection = get_db_mongo()
+col = connection.find()
+
+print(col)
+
+for i in col:
+    print(col)
+
 
 #try:
 #    print(type(db.client))
