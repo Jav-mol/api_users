@@ -4,13 +4,17 @@ from core.config import setting
 
 from db.mongodb.db import get_db_mongo
 #from db.psql.db import get_db_psql 
+from services.users import insert_user
+
 
 from pymongo import client_session 
 
 connection = get_db_mongo()
+user1 = User(username="Javier3", hashed_password="1234", email="javi@gmail.com", rule="admin")
 
-user1 = User(username="Javier", hashed_password="1234", email="javi@gmail.com", rule="admin")
-print(user1.model_dump())
+print(insert_user(db=connection, user=user1))
+
+#print(user1.model_dump())
 #resul = connection.insert_one(user1.model_dump())
 #resul.inserted_id
 
@@ -18,8 +22,8 @@ col = connection.find()
 
 #print(col)
 
-for i in col:
-    print(i)
+#for i in col:
+#    print(i)
 
 
 #try:
