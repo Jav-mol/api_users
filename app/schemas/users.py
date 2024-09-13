@@ -1,6 +1,8 @@
-from pydantic import BaseModel
-
-
+from pydantic import BaseModel, EmailStr
 
 class User(BaseModel):
-    id: int    
+    username: str
+    hashed_password: str
+    email: EmailStr
+    is_active: bool = True
+    rule: str = "user" 

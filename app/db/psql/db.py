@@ -10,6 +10,7 @@ def get_db_psql():
     connection = engine.connect()
     try:
         yield connection
+        connection.commit()
     except Exception as e:
         connection.rollback()
         raise f"Error: {e}"

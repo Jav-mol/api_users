@@ -1,17 +1,25 @@
 from fastapi import FastAPI
+from schemas.users import User
 from core.config import setting
+
 from db.mongodb.db import get_db_mongo
 #from db.psql.db import get_db_psql 
 
 from pymongo import client_session 
 
 connection = get_db_mongo()
+
+user1 = User(username="Javier", hashed_password="1234", email="javi@gmail.com", rule="admin")
+print(user1.model_dump())
+#resul = connection.insert_one(user1.model_dump())
+#resul.inserted_id
+
 col = connection.find()
 
-print(col)
+#print(col)
 
 for i in col:
-    print(col)
+    print(i)
 
 
 #try:
