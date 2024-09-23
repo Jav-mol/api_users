@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from schemas.users import User
+from schemas.users import UserCreate, UserBD
 from core.config import setting
 
 from db.mongodb.db import get_db_mongo
@@ -7,12 +7,15 @@ from db.mongodb.db import get_db_mongo
 from services.users import insert_user
 
 
-from pymongo import client_session 
-
 connection = get_db_mongo()
-user1 = User(username="Javier3", hashed_password="1234", email="javi@gmail.com", rule="admin")
+user1 = UserCreate(username="Javier3", password="1234", email="javi@gmail.com")
 
-print(insert_user(db=connection, user=user1))
+#user_dict = user1.model_dump()
+
+user2 = UserBD(**user1.model_dump())
+
+#print(user2)
+#print(insert_user(db=connection, user=user1))
 
 #print(user1.model_dump())
 #resul = connection.insert_one(user1.model_dump())
@@ -22,8 +25,8 @@ col = connection.find()
 
 #print(col)
 
-#for i in col:
-#    print(i)
+for i in col:
+    print(i)
 
 
 #try:
@@ -36,29 +39,48 @@ col = connection.find()
 """ 
 app/
 │
-├── api/
+├── api/                     # Controladores o Routers de FastAPI
 │   └── routers/
-│       ├── auth.py       # Maneja las solicitudes HTTP para autenticación
-│       ├── user.py       # Maneja las solicitudes HTTP para usuarios
+│       ├── auth.py           # Maneja las solicitudes HTTP para autenticación
+│       ├── user.py           # Maneja las solicitudes HTTP para usuarios
 │
-├── services/             # Lógica de negocio
-│   ├── auth_service.py   # Lógica de autenticación
-│   ├── user_service.py   # Lógica de manejo de usuarios
+├── services/                 # Lógica de negocio
+│   ├── auth_service.py       # Lógica de autenticación
+│   ├── user_service.py       # Lógica de manejo de usuarios
 │
-├── crud/                 # Acceso a datos (CRUD)
-│   ├── user_crud.py      # Funciones CRUD para usuarios
+├── crud/                     # Operaciones CRUD (interacciones con la DB)
+│   ├── user_crud.py          # Funciones CRUD para usuarios
 │
-├── db/
-│   ├── psql/             # Conexión y configuración de PostgreSQL
-│   ├── mongodb/          # Conexión y configuración de MongoDB
+├── db/                       # Configuración de bases de datos
+│   ├── psql/                 # Conexión y configuración de PostgreSQL
+│   ├── mongodb/              # Conexión y configuración de MongoDB
 │
-├── schemas/              # Definición de estructuras de datos
-│   ├── auth_schemas.py   # Schemas para autenticación (ej. login, registro)
-│   ├── user_schemas.py   # Schemas para manejo de usuarios (ej. creación)
+├── schemas/                  # Definición de modelos de datos (schemas)
+│   ├── auth_schemas.py       # Schemas para autenticación (ej. login, registro)
+│   ├── user_schemas.py       # Schemas para manejo de usuarios (ej. creación)
 │
-├── core/
-│   ├── config.py         # Configuraciones generales de la aplicación
+├── core/                     # Configuraciones y utilidades del sistema
+│   ├── config.py             # Configuraciones generales de la aplicación
 │
-├── main.py               # Punto de entrada de la API
+├── main.py                   # Punto de entrada de la aplicación (FastAPI)
+│
+└── tests/                    # Carpeta de pruebas unitarias
+    ├── __init__.py           # Inicialización de paquete para tests
+    ├── api/
+    │   ├── test_auth.py      # Pruebas unitarias para el router de autenticación
+    │   ├── test_user.py      # Pruebas unitarias para el router de usuarios
+    ├── services/
+    │   ├── test_auth_service.py   # Pruebas unitarias para auth_service.py
+    │   ├── test_user_service.py   # Pruebas unitarias para user_service.py
+    ├── crud/
+    │   ├── test_user_crud.py      # Pruebas unitarias para user_crud.py
+    ├── schemas/
+    │   ├── test_auth_schemas.py   # Pruebas unitarias para auth_schemas.py
+    │   ├── test_user_schemas.py   # Pruebas unitarias para user_schemas.py
+    ├── db/
+    │   ├── test_psql.py           # Pruebas unitarias para conexión/configuración de PostgreSQL
+    │   ├── test_mongodb.py        # Pruebas unitarias para conexión/configuración de MongoDB
+    └── core/
+        ├── test_config.py         # Pruebas unitarias para la configuración general
 
 """
