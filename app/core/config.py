@@ -10,3 +10,6 @@ class Setting(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env")
 
 setting = Setting()
+
+
+#print(setting.url_db_psql)

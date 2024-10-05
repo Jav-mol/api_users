@@ -2,12 +2,12 @@ from fastapi import FastAPI
 from schemas.users import UserCreate, UserBD
 from core.config import setting
 
-from db.mongodb.db import get_db_mongo
-#from db.psql.db import get_db_psql 
-from services.users import insert_user
+#from db.mongodb.db import get_db_mongo
+from db.psql import psql_db 
+#from services.users import insert_user
 
 
-connection = get_db_mongo()
+#connection = get_db_mongo()
 user1 = UserCreate(username="Javier3", password="1234", email="javi@gmail.com")
 
 #user_dict = user1.model_dump()
@@ -21,12 +21,12 @@ user2 = UserBD(**user1.model_dump())
 #resul = connection.insert_one(user1.model_dump())
 #resul.inserted_id
 
-col = connection.find()
+#col = connection.find()
 
 #print(col)
 
-for i in col:
-    print(i)
+#for i in col:
+#    print(i)
 
 
 #try:
@@ -83,4 +83,22 @@ app/
     └── core/
         ├── test_config.py         # Pruebas unitarias para la configuración general
 
+"""
+
+""" 
+└── tests/
+    ├── unit/                  # Pruebas unitarias
+    │   ├── __init__.py
+    │   ├── api/
+    │   ├── services/
+    │   ├── crud/
+    │   ├── schemas/
+    │   └── core/
+    │
+    └── integration/            # Pruebas de integración
+        ├── __init__.py
+        ├── test_api_integration.py    # Pruebas de integración para los endpoints completos
+        ├── test_auth_integration.py   # Pruebas de integración para autenticación (ej. login)
+        ├── test_user_integration.py   # Pruebas de integración para operaciones de usuarios
+        └── test_db_integration.py     # Pruebas de integración con la base de datos
 """
