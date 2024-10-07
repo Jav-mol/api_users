@@ -1,6 +1,7 @@
-from crud.users import user_already_exists, insert_user_db, next_id
+from crud.users import user_already_exists, insert_user_db, next_id, user_by_id
 from db.mongodb.get_db import get_db_mongo_override
 from unittest.mock import patch, MagicMock
+from schemas.users import UserDB
 
 users = [
             {"_id":1,"name":"Nico", "Age":24},
@@ -8,8 +9,9 @@ users = [
             {"_id":3,"name":"Azul", "Age":24}
         ]
 
-user = {"_id":1,"username":"Javier", "Age":22}
+user_dict = {"_id":4,"username":"Javier", "password":"1234", "email":"javi@gmail.com"}
 
+user = UserDB(**user_dict)
 
 def test_next_id():
     coll = get_db_mongo_override()
@@ -28,8 +30,36 @@ def test_next_id():
 
 def test_user_already_exist():
     coll = get_db_mongo_override()
-    coll.insert_one(user)
+    coll.insert_one(user_dict)
     
     assert user_already_exists(coll,"Javier") == True
     assert user_already_exists(coll,"Javier2") == False
 
+
+def test_insert_user_db():
+    coll = get_db_mongo_override()
+    
+    #print(user)
+    
+    #user.id = 1
+    
+    #print(user.model_dump())
+    
+    assert insert_user_db(coll, user) == 4
+
+
+def test_user_by_id():
+    coll = get_db_mongo_override()
+    
+    user.id = 1
+    
+    insert_user_db(coll,user)
+    
+    
+    
+    print(user_by_id(coll, 1)) 
+    print(user.model_dump())
+
+
+#def test_user_db():    
+#    print(user._id)
