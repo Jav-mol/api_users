@@ -1,10 +1,10 @@
 from unittest.mock import MagicMock, patch
-from db.mongodb.db import get_db_mongo
+from db.mongodb.get_db import get_db_mongo
 import mongomock
 
 def test_get_db_mongo():
 
-    with patch("db.mongodb.db.MongoClient") as mock_mongo_client:
+    with patch("db.mongodb.get_db.MongoClient") as mock_mongo_client:
 
         mock_users_collection = MagicMock()
 
@@ -17,8 +17,8 @@ def test_get_db_mongo():
         mock_mongo_client.assert_called_once()
         mock_mongo_client.return_value.__getitem__.assert_called_once_with("practice")
         mock_mongo_client.return_value.__getitem__.return_value.__getitem__.assert_called_once_with("users")
-        
-        print(mock_mongo_client.return_value.__getitem__.return_value.__getitem__.call_count)
+
+
 
 
 """ 

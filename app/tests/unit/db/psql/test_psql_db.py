@@ -2,13 +2,13 @@ import pytest
 from unittest.mock import MagicMock, patch
 
 # Supongamos que engine proviene de un módulo que manejamos
-from db.psql.psql_db import get_db_psql
+from db.psql.get_db import get_db_psql
 
 def test_get_db_psql_success():
 
     mock_connection = MagicMock()
 
-    with patch("db.psql.psql_db.engine.connect", return_value=mock_connection) as mock:
+    with patch("db.psql.get_db.engine.connect", return_value=mock_connection) as mock:
 
         gen = get_db_psql()
 
@@ -27,7 +27,7 @@ def test_get_db_psql_success():
 def test_get_db_psql_exception():
     mock_connection = MagicMock()
 
-    with patch("db.psql.psql_db.engine.connect", return_value=mock_connection) as mock:
+    with patch("db.psql.get_db.engine.connect", return_value=mock_connection) as mock:
 
         gen = get_db_psql()
 

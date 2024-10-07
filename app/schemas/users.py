@@ -15,3 +15,4 @@ class UserBD(UserCreate):
     is_active: bool = True
     rol: Literal["admin", "user"] = "user" 
     created_at: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    

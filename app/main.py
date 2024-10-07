@@ -3,7 +3,7 @@ from schemas.users import UserCreate, UserBD
 from core.config import setting
 
 #from db.mongodb.db import get_db_mongo
-from db.psql import psql_db 
+from db.psql import get_db 
 #from services.users import insert_user
 
 
