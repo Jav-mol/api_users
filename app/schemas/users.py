@@ -2,8 +2,7 @@ from pydantic import BaseModel, EmailStr, Field
 from typing import Literal
 from datetime import datetime
 
-class UserCreate(BaseModel):
-    id: int = Field(alias="_id") 
+class UserCreate(BaseModel): 
     username: str
     password: str
     email: EmailStr
@@ -12,7 +11,11 @@ class UserCreate(BaseModel):
     #    "from_attributes":True
     #}
 
-class UserDB(UserCreate):
+class UserDB(BaseModel):
+    id: int = None
+    username: str
+    password: str
+    email: EmailStr
     is_active: bool = True
     rol: Literal["admin", "user"] = "user" 
     created_at: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
