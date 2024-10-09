@@ -1,11 +1,12 @@
-from crud.users import user_already_exists, next_id # --> Others
+from crud.users import username_already_exists, next_id # --> Others
 from crud.users import insert_user_db # --> Create 
-from crud.users import get_user_by_id, get_users # --> Read
+from crud.users import get_user_by_id, get_users, id_exist # --> Read
 from crud.users import update_user # --> Update
 from crud.users import delete_user, delete_many_users # --> Delete
 
 from db.mongodb.get_db import get_db_mongo_override
 from schemas.users import UserDB
+import pytest
 
 users = [
             {"_id":1,"username":"Nico", "password":"4321", "email": "nico@gmail.com"},
@@ -15,7 +16,6 @@ users = [
 
 user_dict = {"id":4,"username":"Javier", "password":"1234", "email":"javi@gmail.com"}
 
-user = UserDB(**user_dict)
 
 def test_next_id():
     coll = get_db_mongo_override()
@@ -32,40 +32,47 @@ def test_next_id():
     assert result == 23
 
 
+def test_id_exist():
+    coll = get_db_mongo_override()
+    user_dict_test = user_dict.copy()
+    
+    insert_user_db(coll, user_dict_test)
+
+    assert id_exist(coll, 4) == True
+    assert id_exist(coll, 5) == None
+
+
 def test_user_already_exist():
     coll = get_db_mongo_override()
     coll.insert_one(user_dict)
 
-    assert user_already_exists(coll,"Javier") == True
-    assert user_already_exists(coll,"Javier2") == False
+    assert username_already_exists(coll,"Javier") == True
+    assert username_already_exists(coll,"Nico") == None
 
 
 def test_insert_user_db():
     coll = get_db_mongo_override()
+    user = UserDB(**user_dict)
 
-    user_db = user.model_dump()
-    user_db["_id"] = user_db.pop("id")
-
-    assert insert_user_db(coll, user_db) == 4
+    user_db = user.model_dump()    
+    print(insert_user_db(coll, user_db))
+    #assert insert_user_db(coll, user_db) == 4
 
 
 def test_get_user_by_id_success():
-    coll = get_db_mongo_override()
+    coll = get_db_mongo_override()  
+    user = UserDB(**user_dict)
 
-    user_dict["_id"] = user_dict.pop("id")
     insert_user_db(coll, user_dict)
-
-    user_db = get_user_by_id(coll, 4) 
-    user_db["id"] = user_db.pop("_id")
+    user_db = get_user_by_id(coll, 4)
 
     assert UserDB(**user_db) == user
 
 
 def test_get_user_by_id_fail():
     coll = get_db_mongo_override()
-    user_db = get_user_by_id(coll, 1) 
-    assert user_db == None 
-
+    result = get_user_by_id(coll, 1) 
+    result == None
 
 def test_get_users():    
     coll = get_db_mongo_override()

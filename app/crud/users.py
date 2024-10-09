@@ -7,14 +7,19 @@ def next_id(collection: Collection) -> int:
     except:
         return 1
 
+def id_exist(collection: Collection, id: int):
+    user = collection.find({"_id":id})
+    try:
+        user[0]
+        return True
+    except: None
 
-def user_already_exists(collection: Collection, username: str) -> bool:
+def username_already_exists(collection: Collection, username: str) -> bool:
     user = collection.find({"username":username})
     try:
         user[0]
         return True
-    except:
-        return False
+    except: None
 
 # --- CREATE ---
 def insert_user_db(collection: Collection, user: dict) -> int:    
@@ -25,7 +30,11 @@ def insert_user_db(collection: Collection, user: dict) -> int:
 # --- READ ---
 def get_user_by_id(collection: Collection, id: int) -> dict:
     user = collection.find_one({"_id":id})
-    return user
+    try: 
+        user["id"] = user.pop("_id")
+        return user
+    except: None
+
 
 def get_users(collection: Collection) -> list[dict]:
     return  [user for user in collection.find()]
