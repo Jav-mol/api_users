@@ -5,7 +5,6 @@ def next_id(collection: Collection) -> int:
     try:
         return max_id[0]["_id"] + 1
     except:
-        print("error")
         return 1
 
 
@@ -17,9 +16,9 @@ def user_already_exists(collection: Collection, username: str) -> bool:
     except:
         return False
 
-
 # --- CREATE ---
 def insert_user_db(collection: Collection, user: dict) -> int:    
+    user["_id"] = user.pop("id")
     user_inserted = collection.insert_one(user)
     return user_inserted.inserted_id
 
@@ -27,7 +26,6 @@ def insert_user_db(collection: Collection, user: dict) -> int:
 def get_user_by_id(collection: Collection, id: int) -> dict:
     user = collection.find_one({"_id":id})
     return user
-
 
 def get_users(collection: Collection) -> list[dict]:
     return  [user for user in collection.find()]
@@ -40,4 +38,8 @@ def update_user(collection: Collection, user: dict, id: int):
 # --- DELETE ---
 def delete_user(collection: Collection, id: int) -> int:
     result = collection.delete_one({"_id":id})
+    return result.deleted_count
+
+def delete_many_users(collection: Collection, ids: list[int]) -> int:
+    result = collection.delete_many({"_id":{"$in":ids}})
     return result.deleted_count

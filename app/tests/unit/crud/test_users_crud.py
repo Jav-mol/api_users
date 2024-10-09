@@ -1,13 +1,11 @@
-from crud.users import user_already_exists, next_id
-from crud.users import insert_user_db
-from crud.users import get_user_by_id, get_users
-from crud.users import update_user
-from crud.users import delete_user
-
+from crud.users import user_already_exists, next_id # --> Others
+from crud.users import insert_user_db # --> Create 
+from crud.users import get_user_by_id, get_users # --> Read
+from crud.users import update_user # --> Update
+from crud.users import delete_user, delete_many_users # --> Delete
 
 from db.mongodb.get_db import get_db_mongo_override
-from unittest.mock import patch, MagicMock
-from schemas.users import UserDB, UserCreate
+from schemas.users import UserDB
 
 users = [
             {"_id":1,"username":"Nico", "password":"4321", "email": "nico@gmail.com"},
@@ -36,7 +34,6 @@ def test_next_id():
 
 def test_user_already_exist():
     coll = get_db_mongo_override()
-    
     coll.insert_one(user_dict)
 
     assert user_already_exists(coll,"Javier") == True
@@ -66,11 +63,8 @@ def test_get_user_by_id_success():
 
 def test_get_user_by_id_fail():
     coll = get_db_mongo_override()
-
     user_db = get_user_by_id(coll, 1) 
-
     assert user_db == None 
-
 
 
 def test_get_users():    
@@ -87,23 +81,52 @@ def test_get_users():
     assert len(users_list) == 3
 
 
-def test_update_user():        
+def test_update_user_success():        
     coll = get_db_mongo_override()
     coll.insert_many(users)
 
     new_user = {"username":"Javier", "password":"1234", "email":"javi@gmail.com"}
-
     result = update_user(coll, new_user, 1)
-    
+
     assert result["username"] == "Javier"
     assert result["password"] == "1234"
     assert result["email"] == "javi@gmail.com"
 
 
-def test_delete_user():
+def test_update_user_fail():        
+    coll = get_db_mongo_override()
+
+    new_user = {"username":"Javier", "password":"1234", "email":"javi@gmail.com"}
+    result = update_user(coll, new_user, 1)
+
+    assert result == None
+
+
+def test_delete_user_success():
         coll = get_db_mongo_override()
         coll.insert_many(users)
 
         result = delete_user(coll, 3)
-        
         assert result == 1
+
+
+def test_delete_user_fail():
+        coll = get_db_mongo_override()
+        result = delete_user(coll, 1)
+        assert result == 0
+
+
+def test_delete_many_users_success():
+        coll = get_db_mongo_override()
+        coll.insert_many(users)
+
+        ids = [1,2,3]
+        result = delete_many_users(coll, ids)
+
+        assert result == 3
+
+
+def test_delete_many_users_fail():
+        coll = get_db_mongo_override()
+        result = delete_many_users(coll, [1,2,3])
+        assert result == 0
