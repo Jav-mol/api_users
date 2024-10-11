@@ -12,7 +12,7 @@ class UserCreate(BaseModel):
     #}
 
 class UserDB(BaseModel):
-    id: int
+    id: int = None
     username: str
     password: str
     email: EmailStr

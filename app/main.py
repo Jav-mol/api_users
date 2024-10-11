@@ -1,40 +1,5 @@
-from fastapi import FastAPI
-from schemas.users import UserCreate, UserBD
-from core.config import setting
+"ctrl + o / enter / ctrl + x"
 
-#from db.mongodb.db import get_db_mongo
-from db.psql import get_db 
-#from services.users import insert_user
-
-
-#connection = get_db_mongo()
-user1 = UserCreate(username="Javier3", password="1234", email="javi@gmail.com")
-
-#user_dict = user1.model_dump()
-
-user2 = UserBD(**user1.model_dump())
-
-#print(user2)
-#print(insert_user(db=connection, user=user1))
-
-#print(user1.model_dump())
-#resul = connection.insert_one(user1.model_dump())
-#resul.inserted_id
-
-#col = connection.find()
-
-#print(col)
-
-#for i in col:
-#    print(i)
-
-
-#try:
-#    print(type(db.client))
-#except Exception as e:
-#    print(f"Error: {e}")
-#app = FastAPI()
-#app.include_router(app1)
 
 """ 
 app/

@@ -21,7 +21,9 @@ def test_create_user_db_fail():
     coll = get_db_mongo_override()
 
     user_input = {"username":"Javier", "password":"1234", "email":"javi@gmail.com"}
-    create_user_db(coll, UserCreate(**user_input))
+    result = create_user_db(coll, UserCreate(**user_input))
 
     with pytest.raises(ValueError, match="User already exist"):
-        create_user_db(coll, UserCreate(**user_input))
+        result_2 = create_user_db(coll, UserCreate(**user_input))
+
+

@@ -1,7 +1,8 @@
 from pymongo import MongoClient
-from core.config import setting
+from core.config import Setting
 import mongomock
 
+setting = Setting()
 url = setting.url_db_mongo
 
 def get_db_mongo():
