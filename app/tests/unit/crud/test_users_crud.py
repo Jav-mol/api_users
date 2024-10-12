@@ -1,6 +1,6 @@
 from crud.users import username_already_exists, next_id # --> Others
 from crud.users import insert_user_db # --> Create 
-from crud.users import get_user_by_id, get_users, id_exist # --> Read
+from crud.users import get_user_by_username, get_users, id_exist # --> Read
 from crud.users import update_user # --> Update
 from crud.users import delete_user, delete_many_users # --> Delete
 
@@ -55,23 +55,22 @@ def test_insert_user_db():
     user = UserDB(**user_dict)
 
     user_db = user.model_dump()    
-    print(insert_user_db(coll, user_db))
-    #assert insert_user_db(coll, user_db) == 4
+    assert insert_user_db(coll, user_db) == 4
 
 
-def test_get_user_by_id_success():
+def test_get_user_by_username_success():
     coll = get_db_mongo_override()  
     user = UserDB(**user_dict)
 
     insert_user_db(coll, user_dict)
-    user_db = get_user_by_id(coll, 4)
+    user_db = get_user_by_username(coll, "Javier")
 
     assert UserDB(**user_db) == user
 
 
-def test_get_user_by_id_fail():
+def test_get_user_by_username_fail():
     coll = get_db_mongo_override()
-    result = get_user_by_id(coll, 1) 
+    result = get_user_by_username(coll, "Javier2") 
     result == None
 
 def test_get_users():    

@@ -28,8 +28,8 @@ def insert_user_db(collection: Collection, user: dict) -> int:
     return user_inserted.inserted_id
 
 # --- READ ---
-def get_user_by_id(collection: Collection, id: int) -> dict:
-    user = collection.find_one({"_id":id})
+def get_user_by_username(collection: Collection, username: int) -> dict:
+    user = collection.find_one({"username":username})
     try: 
         user["id"] = user.pop("_id")
         return user

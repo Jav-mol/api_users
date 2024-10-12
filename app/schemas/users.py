@@ -24,4 +24,3 @@ class UserDB(BaseModel):
 class UserOutput(BaseModel):
     id: int
     username:str
-    
