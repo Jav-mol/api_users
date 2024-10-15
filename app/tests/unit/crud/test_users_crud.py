@@ -1,9 +1,10 @@
 from crud.users import username_already_exists, next_id # --> Others
 from crud.users import insert_user_db # --> Create 
-from crud.users import get_user_by_username, get_users, id_exist # --> Read
-from crud.users import update_user # --> Update
-from crud.users import delete_user, delete_many_users # --> Delete
+from crud.users import get_user_by_username_db, get_users_db, id_exist # --> Read
+from crud.users import update_user_db # --> Update
+from crud.users import delete_user_db, delete_many_users_db # --> Delete
 
+from pymongo.collection import Collection
 from db.mongodb.get_db import get_db_mongo_override
 from schemas.users import UserDB
 import pytest
@@ -17,67 +18,65 @@ users = [
 user_dict = {"id":4,"username":"Javier", "password":"1234", "email":"javi@gmail.com"}
 
 
-def test_next_id():
-    coll = get_db_mongo_override()
+@pytest.fixture
+def collection():
+    return get_db_mongo_override()
 
-    result = next_id(coll)
+
+def test_next_id(collection: Collection):
+    
+    result = next_id(collection)
     assert result == 1
 
-    coll.insert_many(users)
-    result = next_id(coll)
+    collection.insert_many(users)
+    result = next_id(collection)
     assert result == 4
 
-    coll.insert_one({"_id":22,"username":"Javier","age":22})
-    result = next_id(coll)
+    collection.insert_one({"_id":22,"username":"Javier","age":22})
+    result = next_id(collection)
     assert result == 23
 
 
-def test_id_exist():
-    coll = get_db_mongo_override()
+def test_id_exist(collection: Collection):
     user_dict_test = user_dict.copy()
     
-    insert_user_db(coll, user_dict_test)
+    insert_user_db(collection, user_dict_test)
 
-    assert id_exist(coll, 4) == True
-    assert id_exist(coll, 5) == None
-
-
-def test_user_already_exist():
-    coll = get_db_mongo_override()
-    coll.insert_one(user_dict)
-
-    assert username_already_exists(coll,"Javier") == True
-    assert username_already_exists(coll,"Nico") == None
+    assert id_exist(collection, 4) == True
+    assert id_exist(collection, 5) == None
 
 
-def test_insert_user_db():
-    coll = get_db_mongo_override()
+def test_user_already_exist(collection: Collection):
+    collection.insert_one(user_dict)
+
+    assert username_already_exists(collection,"Javier") == True
+    assert username_already_exists(collection,"Nico") == None
+
+
+def test_insert_user_db(collection: Collection):
     user = UserDB(**user_dict)
 
     user_db = user.model_dump()    
-    assert insert_user_db(coll, user_db) == 4
+    assert insert_user_db(collection, user_db) == 4
 
 
-def test_get_user_by_username_success():
-    coll = get_db_mongo_override()  
+def test_get_user_by_username_success(collection: Collection):  
     user = UserDB(**user_dict)
 
-    insert_user_db(coll, user_dict)
-    user_db = get_user_by_username(coll, "Javier")
+    insert_user_db(collection, user_dict)
+    user_db = get_user_by_username_db(collection, "Javier")
 
     assert UserDB(**user_db) == user
 
 
-def test_get_user_by_username_fail():
-    coll = get_db_mongo_override()
-    result = get_user_by_username(coll, "Javier2") 
+def test_get_user_by_username_fail(collection: Collection):
+    result = get_user_by_username_db(collection, "Javier2") 
     result == None
 
-def test_get_users():    
-    coll = get_db_mongo_override()
-    coll.insert_many(users)
+def test_get_users(collection: Collection):   
+    collection.insert_many(users)
 
-    users_db = get_users(coll)
+    users_db = get_users_db(collection)
     users_list = []
 
     for user in users_db:
@@ -87,52 +86,46 @@ def test_get_users():
     assert len(users_list) == 3
 
 
-def test_update_user_success():        
-    coll = get_db_mongo_override()
-    coll.insert_many(users)
+def test_update_user_success(collection: Collection):       
+    collection.insert_many(users)
 
     new_user = {"username":"Javier", "password":"1234", "email":"javi@gmail.com"}
-    result = update_user(coll, new_user, 1)
+    result = update_user_db(collection, new_user, 1)
 
     assert result["username"] == "Javier"
     assert result["password"] == "1234"
     assert result["email"] == "javi@gmail.com"
 
 
-def test_update_user_fail():        
-    coll = get_db_mongo_override()
+def test_update_user_fail(collection: Collection):       
 
     new_user = {"username":"Javier", "password":"1234", "email":"javi@gmail.com"}
-    result = update_user(coll, new_user, 1)
+    result = update_user_db(collection, new_user, 1)
 
     assert result == None
 
 
-def test_delete_user_success():
-        coll = get_db_mongo_override()
-        coll.insert_many(users)
+def test_delete_user_success(collection: Collection):
+        collection.insert_many(users)
 
-        result = delete_user(coll, 3)
+        result = delete_user_db(collection, 3)
         assert result == 1
 
 
-def test_delete_user_fail():
-        coll = get_db_mongo_override()
-        result = delete_user(coll, 1)
+def test_delete_user_fail(collection: Collection):
+        result = delete_user_db(collection, 1)
         assert result == 0
 
 
-def test_delete_many_users_success():
-        coll = get_db_mongo_override()
-        coll.insert_many(users)
+def test_delete_many_users_success(collection: Collection):
+        collection.insert_many(users)
 
         ids = [1,2,3]
-        result = delete_many_users(coll, ids)
+        result = delete_many_users_db(collection, ids)
 
         assert result == 3
 
 
-def test_delete_many_users_fail():
-        coll = get_db_mongo_override()
-        result = delete_many_users(coll, [1,2,3])
+def test_delete_many_users_fail(collection: Collection):
+        result = delete_many_users_db(collection, [1,2,3])
         assert result == 0

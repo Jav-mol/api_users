@@ -28,7 +28,7 @@ def insert_user_db(collection: Collection, user: dict) -> int:
     return user_inserted.inserted_id
 
 # --- READ ---
-def get_user_by_username(collection: Collection, username: int) -> dict:
+def get_user_by_username_db(collection: Collection, username: int) -> dict:
     user = collection.find_one({"username":username})
     try: 
         user["id"] = user.pop("_id")
@@ -36,19 +36,19 @@ def get_user_by_username(collection: Collection, username: int) -> dict:
     except: None
 
 
-def get_users(collection: Collection) -> list[dict]:
+def get_users_db(collection: Collection) -> list[dict]:
     return  [user for user in collection.find()]
 
 # --- UPDATE ---
-def update_user(collection: Collection, user: dict, id: int):
+def update_user_db(collection: Collection, user: dict, id: int):
     collection.update_one({"_id":id}, {"$set": {"username":user["username"], "password":user["password"], "email":user["email"]}})
     return collection.find_one({"_id":id})
 
 # --- DELETE ---
-def delete_user(collection: Collection, id: int) -> int:
+def delete_user_db(collection: Collection, id: int) -> int:
     result = collection.delete_one({"_id":id})
     return result.deleted_count
 
-def delete_many_users(collection: Collection, ids: list[int]) -> int:
+def delete_many_users_db(collection: Collection, ids: list[int]) -> int:
     result = collection.delete_many({"_id":{"$in":ids}})
     return result.deleted_count
