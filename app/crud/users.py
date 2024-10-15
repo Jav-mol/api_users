@@ -37,7 +37,8 @@ def get_user_by_username_db(collection: Collection, username: int) -> dict:
 
 
 def get_users_db(collection: Collection) -> list[dict]:
-    return  [user for user in collection.find()]
+    users_db = collection.find()
+    return  users_db
 
 # --- UPDATE ---
 def update_user_db(collection: Collection, user: dict, id: int):

@@ -34,7 +34,6 @@ def test_create_user_db_fail(collection: Collection):
         result_2 = create_user(collection, UserCreate(**user_input))
 
 
-
 def test_get_users(collection: Collection):
 
     user_input_1 = {"username":"Javier", "password":"1234", "email":"javi@gmail.com"}
@@ -44,35 +43,8 @@ def test_get_users(collection: Collection):
     create_user(collection, UserCreate(**user_input_2))
 
     users = read_users(db=collection)
+    #pprint(users, sort_dicts=False)
+    
+    assert users[0]["Javier"]["id"] == 1
+    assert users[1]["Azul"]["id"] == 2
 
-    pprint(users, indent=4)
-    
-"""  
-def test_user_list(collection: Collection):
-    
-    user_input_1 = {"username":"Javier", "password":"1234", "email":"javi@gmail.com"}
-    user_input_2 = {"username":"Azul", "password":"4321", "email":"azul@gmail.com"}
-
-    create_user(collection, UserCreate(**user_input_1))
-    create_user(collection, UserCreate(**user_input_2))
-
-    user_dict = collection.find_one({"username":"Javier"})
-    user_dict_2 = collection.find_one({"username":"Azul"})
-    
-    
-    user = UserDict(**user_dict)
-    user2 = UserDict(**user_dict_2)
-    
-    #print(user)
-    #user = user.model_dump()
-    
-    #print(user)
-    
-    user_end = UsersToList(user=user)
-    user_end_2 = UsersToList(user=user2)
-    
-    lista = [user_end.to_dict(), user_end_2.to_dict()]
-    
-    pprint(lista)
-    
-"""

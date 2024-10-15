@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from pymongo.collection import Collection
-from schemas.users import UserCreate, UserDB, UserOutput, UserDict, UsersToList
+from schemas.users import UserCreate, UserDB, UserOutput, UsersToList
 
 from crud.users import username_already_exists, next_id, id_exist # --> Others
 from crud.users import insert_user_db # --> Create 
@@ -27,19 +27,24 @@ def create_user(db: Collection, user: UserCreate) -> UserOutput:
     return UserOutput(**user_inserted)
 
 
-def read_users(db: Collection) -> list:
-    users = get_users_db(collection=db)
-    users_2 = [UserDict(**i) for i in users]
-    users_3 = [UsersToList(user=i).to_dict() for i in users]
+def read_users(db: Collection) -> list[UsersToList]:
+    users_db = get_users_db(collection=db)
     
-    return users_3
+    users_format = []
+    for user in users_db:
+        user["id"] = user.pop("_id")
+        users_format.append(user)
+    
+    users_list = [UsersToList(**user).to_dict() for user in users_format]
+    return users_list
 
 
-def read_user_by_username(db: Collection, username: str) -> UserOutput:
+def read_user_by_username(db: Collection, username: str) -> UsersToList:
     user = get_user_by_username_db(collection=db, username=username)
     if not user:
         raise ValueError("Id not exist")
-    return user
+    user["id"] = user.pop("_id")
+    return UsersToList(**user)
 
 
 def update_user(id: int, db: Collection, user: UserCreate):

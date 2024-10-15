@@ -25,30 +25,21 @@ class UserOutput(BaseModel):
     id: int
     username:str
 
-
-class UserCurrent(UserOutput):
-    created_at: str
-        
 class UserUpdate(BaseModel):
     pass
 
-class UserDict(UserDB):
+class UsersToList(UserDB):
     password: str = Field(default=None, exclude=True)
-    #id: int
-    #username: str
-
-class UsersToList(BaseModel):
-    user: UserDict
     
     def to_dict(self):
         return {
-            self.user.username: {
-                "id": self.user.id,
-                "username":self.user.username,            
-                "email": self.user.email,
-                "is_active":self.user.is_active,
-                "rol":self.user.rol,
-                "created_at":self.user.created_at
+            self.username: {
+                "id": self.id,
+                "username":self.username,            
+                "email": self.email,
+                "is_active":self.is_active,
+                "rol":self.rol,
+                "created_at":self.created_at
             }
         }
 """
