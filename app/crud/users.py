@@ -28,20 +28,26 @@ def insert_user_db(collection: Collection, user: dict) -> int:
     return user_inserted.inserted_id
 
 # --- READ ---
-def get_user_by_username_db(collection: Collection, username: int) -> dict:
+def get_user_by_username_db(collection: Collection, username: str) -> dict:
     user = collection.find_one({"username":username})
     try: 
         user["id"] = user.pop("_id")
         return user
     except: None
 
+def get_user_by_id_db(collection: Collection, id: int) -> dict:
+    user = collection.find_one({"_id":id})
+    try: 
+        user["id"] = user.pop("_id")
+        return user
+    except: None
 
 def get_users_db(collection: Collection) -> list[dict]:
     users_db = collection.find()
     return  users_db
 
 # --- UPDATE ---
-def update_user_db(collection: Collection, user: dict, id: int):
+def update_user_db(collection: Collection, user: dict, id: int) -> dict:
     collection.update_one({"_id":id}, {"$set": {"username":user["username"], "password":user["password"], "email":user["email"]}})
     return collection.find_one({"_id":id})
 

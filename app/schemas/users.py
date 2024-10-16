@@ -26,7 +26,10 @@ class UserOutput(BaseModel):
     username:str
 
 class UserUpdate(BaseModel):
-    pass
+    username: str = None
+    password: str = None
+    email: EmailStr = None
+
 
 class UsersToList(UserDB):
     password: str = Field(default=None, exclude=True)

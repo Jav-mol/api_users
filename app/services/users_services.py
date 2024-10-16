@@ -1,10 +1,10 @@
 from fastapi import HTTPException
 from pymongo.collection import Collection
-from schemas.users import UserCreate, UserDB, UserOutput, UsersToList
+from schemas.users import UserCreate, UserDB, UserOutput, UsersToList, UserUpdate
 
 from crud.users import username_already_exists, next_id, id_exist # --> Others
 from crud.users import insert_user_db # --> Create 
-from crud.users import get_user_by_username_db, get_users_db # --> Read
+from crud.users import get_user_by_username_db, get_user_by_id_db, get_users_db # --> Read
 from crud.users import update_user_db # --> Update
 from crud.users import delete_user_db, delete_many_users_db # --> Delete
 
@@ -47,5 +47,17 @@ def read_user_by_username(db: Collection, username: str) -> UsersToList:
     return UsersToList(**user)
 
 
-def update_user(id: int, db: Collection, user: UserCreate):
-    pass
+def update_user(id: int, db: Collection, user: UserUpdate):
+    user_old = get_user_by_id_db(collection=db, id=id)
+    if not user.username:
+        user.username = user_old["username"]
+    if not user.email:
+        user.email = user_old["email"]
+    if not user.password:
+        user.password = user_old["username"]
+    else:
+        user.password = get_hashed_password(user.password)
+        
+    user_new = update_user_db(collection=db, user=user.model_dump(), id=id)
+    
+    return user_new
