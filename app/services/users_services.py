@@ -42,12 +42,15 @@ def read_users(db: Collection) -> list[UsersToList]:
 def read_user_by_username(db: Collection, username: str) -> UsersToList:
     user = get_user_by_username_db(collection=db, username=username)
     if not user:
-        raise ValueError("Id not exist")
+        raise ValueError("Username not exist")
     user["id"] = user.pop("_id")
     return UsersToList(**user)
 
 
 def update_user(id: int, db: Collection, user: UserUpdate):
+    if not id_exist(collection=db, id=id):
+        raise ValueError("Id not exist")
+    
     user_old = get_user_by_id_db(collection=db, id=id)
     if not user.username:
         user.username = user_old["username"]
@@ -60,4 +63,22 @@ def update_user(id: int, db: Collection, user: UserUpdate):
         
     user_new = update_user_db(collection=db, user=user.model_dump(), id=id)
     
-    return user_new
+    return UserUpdate(**user_new)
+
+
+def dalete_user(id: int, db: Collection) -> int:
+    if not id_exist(collection=db, id=id):
+        raise ValueError("Id not exist")
+    
+    user_deleted = delete_user_db(collection=db, id=id)
+    return user_deleted
+
+
+def delete_many_users(ids: list[int], db: Collection):
+    for id in ids:
+        if not id_exist(collection=db, id=id):
+            raise ValueError("Id not exist")
+        
+    count_users_deleted = delete_many_users_db(collection=db, ids=ids)
+    return count_users_deleted
+    

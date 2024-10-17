@@ -31,14 +31,12 @@ def insert_user_db(collection: Collection, user: dict) -> int:
 def get_user_by_username_db(collection: Collection, username: str) -> dict:
     user = collection.find_one({"username":username})
     try: 
-        user["id"] = user.pop("_id")
         return user
     except: None
 
 def get_user_by_id_db(collection: Collection, id: int) -> dict:
     user = collection.find_one({"_id":id})
     try: 
-        user["id"] = user.pop("_id")
         return user
     except: None
 
