@@ -6,10 +6,10 @@ from services.users_services import dalete_user
 from services.users_services import delete_many_users
 
 
-from utils.security import verify_hashed_password, get_hashed_password
+from utils.security import verify_hashed_password
 from pymongo.collection import Collection
 from db.mongodb.get_db import get_db_mongo_override
-from schemas.users import UserCreate, UserDB, UsersToList, UserUpdate
+from schemas.users import UserCreate, UserUpdate
 from pprint import pprint
 import pytest
 

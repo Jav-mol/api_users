@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, inspect
 from core.config import Setting
+import sqlite3
 
 setting = Setting()
 
@@ -13,6 +14,17 @@ def get_db_psql():
         connection.commit()
     except Exception as e:
         connection.rollback()
+        raise f"Error: {e}"
+    finally:
+        connection.close()
+
+url_test = ":memory:"
+def get_db_override():
+    connection = sqlite3.connect(url_test)
+    try:
+        yield connection
+        connection.commit()
+    except Exception as e:
         raise f"Error: {e}"
     finally:
         connection.close()
