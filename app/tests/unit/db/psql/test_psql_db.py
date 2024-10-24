@@ -1,7 +1,6 @@
 import pytest
 from unittest.mock import MagicMock, patch
 
-# Supongamos que engine proviene de un módulo que manejamos
 from db.psql.get_db import get_db_psql
 
 def test_get_db_psql_success():

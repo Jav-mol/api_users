@@ -19,7 +19,7 @@ def get_db_psql():
         connection.close()
 
 url_test = ":memory:"
-def get_db_override():
+def get_db__psql_override():
     connection = sqlite3.connect(url_test)
     try:
         yield connection
@@ -29,18 +29,3 @@ def get_db_override():
     finally:
         connection.close()
 
-if __name__== "__main__":
-
-
-    try:
-        engine = create_engine(setting.url_db_psql)
-        
-        print(engine)
-            
-        inspector = inspect(engine)
-        
-        tables = inspector.get_table_names()
-        
-        print(tables)
-    except Exception as e:
-        print(e)
