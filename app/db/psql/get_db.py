@@ -18,7 +18,9 @@ def get_db_psql():
     finally:
         connection.close()
 
+from db.psql.models.books import metadata
 url_test = ":memory:"
+
 def get_db__psql_override():
     connection = sqlite3.connect(url_test)
     try:

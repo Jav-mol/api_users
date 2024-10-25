@@ -70,6 +70,7 @@ def test_get_user_by_username_success(collection: Collection, user_dict):
 
     insert_user_db(collection, user_dict)  
     user_db = get_user_by_username_db(collection, "Javier")
+    user_db["id"] = user_db.pop("_id")
 
     assert UserDB(**user_db) == user
 
@@ -84,6 +85,7 @@ def test_get_user_by_id_success(collection: Collection, user_dict):
 
     insert_user_db(collection, user_dict)  
     user_db = get_user_by_id_db(collection, 4)
+    user_db["id"] = user_db.pop("_id")
 
     assert UserDB(**user_db) == user
 
