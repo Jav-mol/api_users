@@ -28,7 +28,10 @@ def test_get_db_psql_exception():
 
 def test_get_db_psql_override_success():
     connection = get_db__psql_override()
+    
     for i in connection:
-        print(i)
+        print(i.get_table_names())
+    
+    print("Hola")
     #print(connection.get_table_names())
 

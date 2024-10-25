@@ -19,15 +19,21 @@ def get_db_psql():
         connection.close()
 
 from db.psql.models.books import metadata
-url_test = ":memory:"
+url_test = "sqlite:///:memory:"
 
 def get_db__psql_override():
-    connection = sqlite3.connect(url_test)
+    engine2 = create_engine(url_test)
+    connection = engine2.connect()    
+    inspector = inspect(engine2)
+    metadata.create_all(engine2)
+    print(inspector.get_table_names())
+    print("Hola")
     try:
-        yield connection
+        yield inspector
         connection.commit()
     except Exception as e:
         raise f"Error: {e}"
     finally:
         connection.close()
 
+    
