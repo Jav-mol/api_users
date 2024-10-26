@@ -7,4 +7,5 @@ def check_book_exists(db: Connection, book: Book):
     print(book_db)
     
 def insert_book_db(db: Connection, book: Book):
-    pass
+    db.execute(books.insert().values(title=book.title, author=book.author))
+    db.commit()

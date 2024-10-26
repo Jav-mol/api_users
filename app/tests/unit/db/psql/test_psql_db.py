@@ -24,9 +24,12 @@ def test_get_db_psql_exception():
             gen.throw(Exception)
         mock_connection.rollback.assert_called_once()
 
+from db.psql.models.books import books
 
 def test_get_db_psql_override_success():
-    result = get_db__psql_override()        
-    connect = next(result)
-    assert isinstance(connect, Connection) == True
+    db = get_db__psql_override()        
+
+    with db as connection:
+        assert isinstance(connection, Connection) == True
+    
 
