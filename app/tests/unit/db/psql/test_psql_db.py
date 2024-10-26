@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock, patch
-
+from sqlalchemy import Connection
 from db.psql.get_db import get_db_psql, get_db__psql_override
 
 def test_get_db_psql_success():
@@ -25,13 +25,8 @@ def test_get_db_psql_exception():
         mock_connection.rollback.assert_called_once()
 
 
-
 def test_get_db_psql_override_success():
-    connection = get_db__psql_override()
-    
-    for i in connection:
-        print(i.get_table_names())
-    
-    print("Hola")
-    #print(connection.get_table_names())
+    result = get_db__psql_override()        
+    connect = next(result)
+    assert isinstance(connect, Connection) == True
 
