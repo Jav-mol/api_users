@@ -1,9 +1,11 @@
 from db.psql.get_db import get_db__psql_override
-from crud.books import check_book_exists, insert_book_db
+from crud.books import check_book_exists, insert_book_db, read_books_db
+
 from schemas.books import Book
 from db.psql.models.books import books
 
 from sqlalchemy import Connection
+from pprint import pprint
 import pytest
 
 @pytest.fixture
@@ -15,7 +17,7 @@ def connection():
 @pytest.fixture
 def list_books():
     books = [
-            {"author": "Víctor Hugo", "title": "Los Miserables"},
+            {"author": "Victor Hugo", "title": "Los Miserables"},
             {"author": "Fiódor Dostoyevski", "title": "Crimen y Castigo"},
             {"author": "George Orwell", "title": "1984"},
             {"author": "Gabriel García Márquez", "title": "Cien años de soledad"},
@@ -29,10 +31,14 @@ def list_books():
     return books
 
 
-def test_check_book_exists(connection: Connection):
-    pass
-
-def test_insert_book_db(connection: Connection, list_books: list):
+def test_check_book_exists(connection: Connection, list_books: list):
+    for book in list_books:
+        insert_book_db(db=connection, book=Book(**book))
     
+    book_exist = check_book_exists(db=connection, book=Book(title="Los Miserables", author="Victor Hugo"))
+    print(book_exist)
+    
+def test_insert_book_db(connection: Connection, list_books: list):
     book = Book(**list_books[0])
-    insert_book_db(db=connection, book=book)
+    book_db = insert_book_db(db=connection, book=book)
+    print(book_db[0])
