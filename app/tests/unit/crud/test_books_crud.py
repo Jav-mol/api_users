@@ -1,6 +1,5 @@
 from db.psql.get_db import get_db__psql_override
-from crud.books import check_book_exists, insert_book_db, read_books_db
-
+from crud.books import check_book_exists, insert_book_db, read_books_db, delete_book_db
 from schemas.books import Book
 from db.psql.models.books import books
 
@@ -53,4 +52,12 @@ def test_read_books_db(connection: Connection, list_books: list):
     
     books_db = read_books_db(db=connection)
     assert len(books_db) == 10
+    
+
+def test_delete_book_db(connection: Connection, list_books: list):
+    insert_book_db(db=connection, book=Book(**list_books[0]))
+    
+    book_deleted = delete_book_db(db=connection, id_book=1)
+    
+    assert book_deleted == 1
     

@@ -13,3 +13,7 @@ def insert_book_db(db: Connection, book: Book) -> int:
 def read_books_db(db: Connection) -> list[dict]:
     books_db = db.execute(books.select())
     return [book for book in books_db] 
+
+def delete_book_db(db: Connection, id_book: int) -> int:
+    book_deleted = db.execute(books.delete().where(books.c.id == id_book))
+    return book_deleted.rowcount
