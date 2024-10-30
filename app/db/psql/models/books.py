@@ -10,7 +10,7 @@ books = Table('books', metadata,
               Column("created_at", String, default=datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
 
 
-user_book = Table("user_book", metadata,
+users_books = Table("users_books", metadata,
               Column("book_id", Integer, ForeignKey("books.id")),
               Column("user_id", Integer)
-                  )
+                )
