@@ -11,6 +11,6 @@ books = Table('books', metadata,
 
 
 users_books = Table("users_books", metadata,
-              Column("book_id", Integer, ForeignKey("books.id")),
-              Column("user_id", Integer)
+              Column("user_id", Integer),
+              Column("book_id", Integer, ForeignKey("books.id"))
                 )
