@@ -1,6 +1,11 @@
 from db.psql.get_db import get_db__psql_override
-from crud.users_books import insert_user_book_db, read_users_books_by_user_id
+
+from crud.users_books import insert_user_book_db
+from crud.users_books import read_users_books_by_user_id, check_user_book_exist
+from crud.users_books import delete_user_book
+
 from crud.books import insert_book_db
+
 from schemas.users_books import UserBook
 from schemas.books import Book
 
@@ -31,6 +36,7 @@ users_books_list = [
                 {"book_id":5,"user_id":3}
             ]
 
+
 @pytest.fixture
 def connection():
     db = get_db__psql_override()
@@ -55,10 +61,17 @@ def test_insert_user_book_db(connection: Connection):#, users_books_list: list):
 def test_read_users_books_db(connection: Connection):
     users_books_db = read_users_books_by_user_id(db=connection, user_id=1)
 
-    #assert len(users_books_db) == 2
-    print()
-    #pprint(users_books_db)
-    user_book = users_books_db[0]
+    assert len(users_books_db) == 2
     
-    print(user_book)
     
+def test_check_user_book_exist(connection: Connection):
+    user_book = check_user_book_exist(db=connection, user_id=1, book_id=2)
+    assert user_book == True
+    
+    user_book_2 = check_user_book_exist(db=connection, user_id=1, book_id=4)
+    assert user_book_2 == False
+
+
+def test_delete_user_book(connection: Connection):
+    user_book_deleted = delete_user_book(db=connection, user_id=1)
+    assert user_book_deleted == 2
