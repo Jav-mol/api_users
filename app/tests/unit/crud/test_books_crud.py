@@ -1,5 +1,5 @@
 from db.psql.get_db import get_db__psql_override
-from crud.books import check_book_exists, insert_book_db, read_books_db, delete_book_db
+from crud.books import check_book_exists, insert_book_db, read_books_db, read_book_db_by_id, delete_book_db
 from schemas.books import Book
 
 from sqlalchemy import Connection
@@ -51,7 +51,15 @@ def test_read_books_db(connection: Connection, books_list: list):
     
     books_db = read_books_db(db=connection)
     assert len(books_db) == 10
+
+
+def test_read_book_by_id(connection: Connection, books_list: list):
+    for book in books_list:
+        insert_book_db(db=connection, book=Book(**book))
     
+    book = read_book_db_by_id(db=connection, id=1)
+
+    print(book)
 
 def test_delete_book_db(connection: Connection, books_list: list):
     insert_book_db(db=connection, book=Book(**books_list[0]))

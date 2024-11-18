@@ -1,9 +1,9 @@
-from services.books_services import create_book
-
+from services.books_services import create_book, read_books, delete_book
 
 from db.psql.get_db import get_db__psql_override
 from schemas.books import Book
 from sqlalchemy import Connection
+from pprint import pprint
 import pytest
 
 
@@ -31,6 +31,30 @@ def books_list():
 
 
 def test_create_book_success(connection: Connection, books_list):
-    result = create_book(db=connection, book=Book(title="Javi", author="Javi"))
+    result = create_book(db=connection, book=Book(**books_list[0]))
+    result2 = create_book(db=connection, book=Book(**books_list[1]))
     
-    #assert result == 1
+    assert result == 1
+    assert result2 == 2
+
+
+def test_create_book_fail(connection: Connection, books_list):
+    result = create_book(db=connection, book=Book(**books_list[0]))
+    result2 = create_book(db=connection, book=Book(**books_list[0]))
+    
+    assert result2 == "Book already exists"
+
+
+def test_read_books(connection: Connection, books_list):
+    for book in books_list:
+        create_book(db=connection, book=Book(**book))
+    books = read_books(db=connection)
+    assert len(books) == 10
+
+
+def test_delete_book(connection: Connection, books_list):
+    for book in books_list:
+        create_book(db=connection, book=Book(**book))
+    
+    book_deleted = delete_book(db=connection, id=11)
+    print(book_deleted)
