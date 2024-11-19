@@ -52,10 +52,15 @@ def test_read_books(connection: Connection, books_list):
     assert len(books) == 10
 
 
-def test_delete_book(connection: Connection, books_list):
+def test_delete_book_success(connection: Connection, books_list):
     for book in books_list:
         create_book(db=connection, book=Book(**book))
     
     book_id = read_book_db_by_id(db=connection, id=10)
     book_deleted = delete_book(db=connection, id=10)
     assert book_id == book_deleted
+
+
+def test_delete_book_fail(connection: Connection, books_list):
+    with pytest.raises(ValueError, match="Id not found"):        
+        book_deleted = delete_book(db=connection, id=10)
