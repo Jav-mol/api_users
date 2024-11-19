@@ -1,4 +1,4 @@
-from services.books_services import create_book, read_books, delete_book
+from services.books_services import create_book, read_books, delete_book, read_book_db_by_id
 
 from db.psql.get_db import get_db__psql_override
 from schemas.books import Book
@@ -56,5 +56,6 @@ def test_delete_book(connection: Connection, books_list):
     for book in books_list:
         create_book(db=connection, book=Book(**book))
     
-    book_deleted = delete_book(db=connection, id=11)
-    print(book_deleted)
+    book_id = read_book_db_by_id(db=connection, id=10)
+    book_deleted = delete_book(db=connection, id=10)
+    assert book_id == book_deleted

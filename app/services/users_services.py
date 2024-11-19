@@ -1,4 +1,3 @@
-from fastapi import HTTPException
 from pymongo.collection import Collection
 from schemas.users import UserCreate, UserDB, UserOutput, UsersToList, UserUpdate
 
@@ -81,4 +80,3 @@ def delete_many_users(ids: list[int], db: Collection):
         
     count_users_deleted = delete_many_users_db(collection=db, ids=ids)
     return count_users_deleted
-    
