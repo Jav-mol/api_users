@@ -13,6 +13,7 @@ from sqlalchemy import Connection
 from pprint import pprint
 import pytest
 
+
 books = [
             {"author": "Victor Hugo", "title": "Los Miserables"},
             {"author": "Fiódor Dostoyevski", "title": "Crimen y Castigo"},
@@ -54,16 +55,18 @@ def test_insert_user_book_db(connection: Connection):#, users_books_list: list):
     
     book_dict = UserBook(book_id=1, user_id=1)
     user_book_db = insert_user_book_db(db=connection, user_book=book_dict)
-    
+
     assert user_book_db == 1
 
 
 def test_read_users_books_db(connection: Connection):
     users_books_db = read_users_books_by_user_id(db=connection, user_id=1)
 
+    print()
+    pprint(users_books_db)
     assert len(users_books_db) == 2
-    
-    
+
+
 def test_check_user_book_exist(connection: Connection):
     user_book = check_user_book_exist(db=connection, user_id=1, book_id=2)
     assert user_book == True

@@ -23,6 +23,7 @@ from contextlib import contextmanager
 from db.psql.models.books import metadata
 url_test = "sqlite:///:memory:"
 
+
 @contextmanager
 def get_db__psql_override():
     engine = create_engine(url_test)
@@ -36,4 +37,3 @@ def get_db__psql_override():
     finally:
         connection.close()
 
-    
