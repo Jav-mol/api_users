@@ -5,6 +5,7 @@ from db.psql.models.books import users_books, books
 
 def insert_user_book_db(db: Connection, user_book: UserBook) -> int:                
     user_book_db = db.execute(users_books.insert().values(book_id = user_book.book_id, user_id= user_book.user_id))
+
     return user_book_db.rowcount
 
 
