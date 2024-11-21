@@ -9,6 +9,6 @@ router = APIRouter(
     prefix="/users"
 )
 
-@router.post("")#, response_model=UserOutput)
-async def create_user():#user: UserCreate, db: Annotated[Collection, Depends(get_db_mongo_override)]):
-    return "Hello Word"
+@router.post("")
+async def create_user(user: UserCreate, db: Annotated[Collection, Depends(get_db_mongo_override)]):
+    return user
