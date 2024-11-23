@@ -5,7 +5,7 @@ from datetime import datetime
 class UserCreate(BaseModel): 
     username: str
     password: str
-    email: EmailStr
+    email: str
 
     #model_config = {
     #    "from_attributes":True
