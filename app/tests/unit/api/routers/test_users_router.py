@@ -26,12 +26,14 @@ def test_user():
     user = UserCreate(username="Javi", password="1234", email="Jav@gmail.com")
     return user.model_dump()
 
-@pytest.mark.anyio
-async def test_create_user(test_user):
-    #response = await client.post("/users", json=test_user)
+@pytest.mark.anyio("asyncio")
+async def test_create_user():
 
+    user = UserCreate(username="Javi", password="1234", email="Jav@gmail.com")
+
+    
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://test") as ac:
-        response = await ac.post("/users", json=test_user)
+        response = await ac.post("/users", json=user.model_dump())
     
     print(response.json())
