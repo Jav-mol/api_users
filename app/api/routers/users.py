@@ -9,11 +9,11 @@ from services.users_services import create_user
 router = APIRouter(
     prefix="/users"
 )
-
-from fastapi.concurrency import run_in_threadpool
+import asyncio
 
 @router.post("")
-async def create_user(user: dict, db: Annotated[Collection, Depends(get_db_mongo)]):
-    user_created = create_user(user,db)
-    print(user_created)
-    return user
+async def router_create_user(user: UserCreate, db: Annotated[Collection, Depends(get_db_mongo)]):
+    
+    user_created = create_user(user=user, db=db)
+    
+    return user_created

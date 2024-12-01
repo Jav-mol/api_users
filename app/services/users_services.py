@@ -11,8 +11,6 @@ from utils.security import get_hashed_password
 
 def create_user(db: Collection, user: UserCreate) -> UserOutput:
     
-    print(user)
-    
     if username_already_exists(collection=db, username=user.username):
         raise ValueError("User already exist")
     
