@@ -9,7 +9,7 @@ from services.users_services import create_user
 router = APIRouter(
     prefix="/users"
 )
-import asyncio
+
 
 @router.post("")
 async def router_create_user(user: UserCreate, db: Annotated[Collection, Depends(get_db_mongo)]):

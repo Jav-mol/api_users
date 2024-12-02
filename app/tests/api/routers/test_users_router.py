@@ -15,17 +15,31 @@ app = FastAPI()
 app.include_router(router)
 
 client = TestClient(app)
-app.dependency_overrides[get_db_mongo] = get_db_mongo_override
+
 
 
 @pytest.fixture
 def test_user():
-    user = UserCreate(username="Javi", password="1234", email="Jav@gmail.com")
+    user = UserCreate(username="Javi2", password="1234", email="Jav@gmail.com")
     return user.model_dump()
 
-@pytest.mark.anyio("asyncio")
+#@pytest.fixture
+def override_get_db_mongo():
+    db = get_db_mongo_override()
+    
+    user = UserDB(username="Javi", password="1234", email="Jav@gmail.com")
+    print(user.model_dump())
+    insert_user_db(collection=db, user=user.model_dump())
+    
+    return db
+
+app.dependency_overrides[get_db_mongo] = override_get_db_mongo
+
+
 def test_create_user(test_user):
 
     response = client.post("/users", json=test_user)
+    #response2 = client.post("/users", json=test_user)
     
+    #print(response2.json())
     print(response.json())
