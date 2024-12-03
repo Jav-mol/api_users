@@ -6,6 +6,8 @@ app = FastAPI()
 app.include_router(router)
 
 
+
+
 "ctrl + o / enter / ctrl + x"
 
 

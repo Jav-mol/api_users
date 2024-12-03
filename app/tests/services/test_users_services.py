@@ -1,5 +1,5 @@
-from services.users_services import create_user
-from services.users_services import read_users
+from services.users_services import service_create_user
+from services.users_services import service_read_users
 from services.users_services import read_user_by_username
 from services.users_services import update_user
 from services.users_services import dalete_user
@@ -28,26 +28,26 @@ def users_list():
 
 def test_create_user_db_success(collection: Collection, users_list):
     
-    result = create_user(collection, UserCreate(**users_list[0]))
-    result_2 = create_user(collection, UserCreate(**users_list[1]))
-
+    result = service_create_user(collection, UserCreate(**users_list[0]))
+    result_2 = service_create_user(collection, UserCreate(**users_list[1]))
+    
     assert result.model_dump() == {"id":1,"username":"Javier"} 
     assert result_2.model_dump() == {"id":2,"username":"Azul"} 
 
 
 def test_create_user_db_fail(collection: Collection, users_list):
-    create_user(collection, UserCreate(**users_list[0]))
+    service_create_user(collection, UserCreate(**users_list[0]))
     
     with pytest.raises(ValueError, match="User already exist"):
-        create_user(collection, UserCreate(**users_list[0]))
+        service_create_user(collection, UserCreate(**users_list[0]))
 
 
 def test_get_users(collection: Collection, users_list):
 
-    create_user(collection, UserCreate(**users_list[0]))
-    create_user(collection, UserCreate(**users_list[1]))
+    service_create_user(collection, UserCreate(**users_list[0]))
+    service_create_user(collection, UserCreate(**users_list[1]))
 
-    users = read_users(db=collection)
+    users = service_read_users(db=collection)
     #pprint(users, sort_dicts=False)
     
     assert users[0]["Javier"]["id"] == 1
@@ -55,7 +55,7 @@ def test_get_users(collection: Collection, users_list):
 
 
 def test_read_user_by_username_success(collection: Collection, users_list):
-    create_user(collection, UserCreate(**users_list[0]))
+    service_create_user(collection, UserCreate(**users_list[0]))
     user = read_user_by_username(collection, "Javier")
     
     assert user.model_dump()["username"] == "Javier"
@@ -67,7 +67,7 @@ def test_read_user_by_username_fail(collection: Collection):
 
 
 def test_update_user_success(collection: Collection, users_list):
-    create_user(collection, UserCreate(**users_list[0]))
+    service_create_user(collection, UserCreate(**users_list[0]))
     
     user_new = UserUpdate(username="JAVIER", password="password_updated")
     
@@ -86,7 +86,7 @@ def test_update_user_fail(collection: Collection):
     
     
 def test_dalete_user_success(collection: Collection, users_list):
-    create_user(collection, UserCreate(**users_list[0]))
+    service_create_user(collection, UserCreate(**users_list[0]))
     
     user_deleted = dalete_user(db=collection, id=1)
     assert user_deleted == 1
@@ -98,14 +98,14 @@ def test_dalete_user_fail(collection: Collection):
 
 
 def test_delete_many_users_success(collection: Collection, users_list):    
-    create_user(collection, UserCreate(**users_list[0]))
-    create_user(collection, UserCreate(**users_list[1]))
+    service_create_user(collection, UserCreate(**users_list[0]))
+    service_create_user(collection, UserCreate(**users_list[1]))
         
     count_users_deleted = delete_many_users(db=collection, ids=[1,2])
     assert count_users_deleted == 2
 
 
 def test_delete_many_users_fail(collection: Collection, users_list):    
-    create_user(collection, UserCreate(**users_list[0]))
+    service_create_user(collection, UserCreate(**users_list[0]))
     with pytest.raises(ValueError, match="Id not exist"):
         delete_many_users(db=collection, ids=[1,2])

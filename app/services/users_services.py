@@ -9,32 +9,32 @@ from crud.users import delete_user_db, delete_many_users_db # --> Delete
 
 from utils.security import get_hashed_password
 
-def create_user(db: Collection, user: UserCreate) -> UserOutput:
+def service_create_user(db: Collection, user: UserCreate) -> UserOutput:
     
     if username_already_exists(collection=db, username=user.username):
         raise ValueError("User already exist")
-    
+
     user.password = get_hashed_password(user.password) 
-    
+
     user_db = UserDB(**user.model_dump())
     user_db.id = next_id(collection=db)
-    
+
     id = insert_user_db(collection=db, user=user_db.model_dump())
-    
+
     user_inserted = db.find_one({"_id":id})
     user_inserted["id"] = user_inserted.pop("_id")
-    
+
     return UserOutput(**user_inserted)
 
 
-def read_users(db: Collection) -> list[UsersToList]:
+def service_read_users(db: Collection) -> list[UsersToList]:
     users_db = get_users_db(collection=db)
-    
+
     users_format = []
     for user in users_db:
         user["id"] = user.pop("_id")
         users_format.append(user)
-    
+
     users_list = [UsersToList(**user).to_dict() for user in users_format]
     return users_list
 
