@@ -12,12 +12,7 @@ router = APIRouter(
 
 @router.post("")
 async def create_user(user: UserCreate, db: Annotated[Collection, Depends(get_db_mongo)]):
-    
     user_created = service_create_user(user=user, db=db)
-    
-    #users = service_read_users(db=db)
-    #print(users)
-    
     return user_created
 
 
