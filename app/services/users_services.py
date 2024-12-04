@@ -1,5 +1,6 @@
 from pymongo.collection import Collection
 from schemas.users import UserCreate, UserDB, UserOutput, UsersToList, UserUpdate
+from fastapi import HTTPException
 
 from crud.users import username_already_exists, next_id, id_exist # --> Others
 from crud.users import insert_user_db # --> Create 
@@ -42,7 +43,7 @@ def service_read_users(db: Collection) -> list[UsersToList]:
 def read_user_by_username(db: Collection, username: str) -> UsersToList:
     user = get_user_by_username_db(collection=db, username=username)
     if not user:
-        raise ValueError("Username not exist")
+        raise HTTPException(404,"Username not exist")
     user["id"] = user.pop("_id")
     return UsersToList(**user)
 
