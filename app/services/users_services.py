@@ -43,7 +43,7 @@ def service_read_users(db: Collection) -> list[UsersToList]:
 def read_user_by_username(db: Collection, username: str) -> UsersToList:
     user = get_user_by_username_db(collection=db, username=username)
     if not user:
-        raise HTTPException(404,"Username not exist")
+        raise HTTPException(401,"Username not exist")
     user["id"] = user.pop("_id")
     return UsersToList(**user)
 

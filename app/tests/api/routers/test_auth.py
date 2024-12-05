@@ -38,6 +38,6 @@ app.dependency_overrides[get_db_mongo] = db_mongo_override
 
 
 def test_login_access():
-    response = client.post("login", data={"username":"Javier", "password":"123"})
-    
+    response = client.post("login", data={"username":"Javier", "password":"1234"})
+    print(response.json())
     print(response)

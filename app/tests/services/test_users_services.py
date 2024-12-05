@@ -6,6 +6,7 @@ from services.users_services import dalete_user
 from services.users_services import delete_many_users
 
 
+from fastapi import HTTPException
 from utils.security import verify_hashed_password
 from pymongo.collection import Collection
 from db.mongodb.get_db import get_db_mongo_override
@@ -62,7 +63,7 @@ def test_read_user_by_username_success(collection: Collection, users_list):
 
 
 def test_read_user_by_username_fail(collection: Collection):
-    with pytest.raises(ValueError, match="Username not exist"):
+    with pytest.raises(HTTPException, match="Username not exist"):
         read_user_by_username(collection, "Javier")
 
 
