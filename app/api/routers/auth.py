@@ -15,7 +15,7 @@ class Token(BaseModel):
 
 
 router = APIRouter()
-oauth2 = OAuth2PasswordBearer(tokenUrl="login")
+#oauth2 = OAuth2PasswordBearer(tokenUrl="login")
 
 
 @router.post("/login")

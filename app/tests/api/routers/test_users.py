@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
+from fastapi.security import OAuth2PasswordBearer
 from pprint import pprint 
 
 
@@ -37,7 +38,12 @@ def db_mongo_override():
         service_create_user(db=db, user=UserCreate(**user))
     return db
 
+
+oauth2 = OAuth2PasswordBearer(tokenUrl="login")
+
+
 app.dependency_overrides[get_db_mongo] = db_mongo_override
+app.dependency_overrides[oauth2] = ""
 
 
 @pytest.fixture
