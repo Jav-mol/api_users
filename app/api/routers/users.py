@@ -21,6 +21,6 @@ async def create_user(user: UserCreate, db: Annotated[Collection, Depends(get_db
 
 
 @router.get("")
-async def get_users(db: Annotated[Collection, Depends(get_db_mongo)],token: Annotated[str, Depends(oauth2)]):
+async def get_users(db: Annotated[Collection, Depends(get_db_mongo)], token: Annotated[str, Depends(oauth2)]):
     users = service_read_users(db=db)
     return users

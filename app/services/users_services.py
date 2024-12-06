@@ -13,7 +13,7 @@ from utils.security import get_hashed_password
 def service_create_user(db: Collection, user: UserCreate) -> UserOutput:
     
     if username_already_exists(collection=db, username=user.username):
-        raise ValueError("User already exist")
+        raise HTTPException(401 ,"User already exist")
 
     user.password = get_hashed_password(user.password) 
 

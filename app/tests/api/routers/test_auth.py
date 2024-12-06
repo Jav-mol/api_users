@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
 
 from api.routers.auth import router
@@ -6,7 +6,7 @@ from db.mongodb.get_db import get_db_mongo_override, get_db_mongo
 from schemas.users import UserCreate
 from services.users_services import service_create_user
 
-import python_multipart
+import pytest
 
 app = FastAPI()
 app.include_router(router)
@@ -37,7 +37,14 @@ def db_mongo_override():
 app.dependency_overrides[get_db_mongo] = db_mongo_override
 
 
-def test_login_access():
+def test_login_access_success():
     response = client.post("login", data={"username":"Javier", "password":"1234"})
-    print(response.json())
-    print(response)
+    #print(response.json())
+    #print(response)
+    assert response.status_code == 200
+
+
+def test_login_access_fail():
+    response = client.post("login", data={"username":"Javier", "password":"4321"})
+
+    assert response.status_code == 401

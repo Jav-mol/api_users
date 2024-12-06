@@ -1,11 +1,12 @@
 from fastapi.testclient import TestClient
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from pprint import pprint 
 
 
 from api.routers.users import router
 
+from api.routers.users import oauth2
 from schemas.users import UserCreate, UserDB, UserOutput
 from services.users_services import service_create_user
 from db.mongodb.get_db import get_db_mongo, get_db_mongo_override
@@ -39,11 +40,11 @@ def db_mongo_override():
     return db
 
 
-oauth2 = OAuth2PasswordBearer(tokenUrl="login")
-
+def access_token_override():
+    return None
 
 app.dependency_overrides[get_db_mongo] = db_mongo_override
-app.dependency_overrides[oauth2] = ""
+app.dependency_overrides[oauth2] = access_token_override
 
 
 @pytest.fixture
@@ -61,12 +62,12 @@ def test_create_user_success(test_user):
 
 
 def test_create_user_fail():
-    with pytest.raises(ValueError, match="User already exist"):
-        user = UserCreate(username="Javier", password="1234", email="Jav@gmail.com")
-        response = client.post("/users", json=user.model_dump())
+    user = UserCreate(username="Javier", password="1234", email="Jav@gmail.com")
+    response = client.post("/users", json=user.model_dump())
 
+    assert response.status_code == 401
 
 def test_get_users():
     response = client.get("/users")
+    pprint(response.json(), sort_dicts=False)
     assert len(response.json()) == 10
-    #pprint(response.json(), sort_dicts=False)
