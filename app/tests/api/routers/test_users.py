@@ -6,6 +6,7 @@ from pprint import pprint
 
 from api.routers.users import router
 
+from api.routers.auth import Token
 from api.routers.users import oauth2, get_current_user
 from schemas.users import UserCreate, UserDB, UserOutput
 from services.users_services import service_create_user
@@ -42,14 +43,17 @@ def db_mongo_override():
 from utils.security import get_access_token
 
 
-def access_token_override():
-    data = {"sub":"Javier", "role":"user"}
+def get_current_user_override():
+    data = {"sub":"Javier", "role":"admin"}
     access_token = get_access_token(data=data)
     
-    return {"access_token": access_token, "token_type":"bearer"}
+    token = Token(access_token=access_token)
+    user = get_current_user(token.model_dump())
+    
+    return user
 
 app.dependency_overrides[get_db_mongo] = db_mongo_override
-app.dependency_overrides[get_current_user] = access_token_override
+app.dependency_overrides[get_current_user] = get_current_user_override
 
 
 @pytest.fixture
@@ -58,10 +62,9 @@ def test_user():
     return user.model_dump()
 
 
-def test_get_current_user():
-    access_token = access_token_override()
-    user = get_current_user(access_token.get("access_token"))
-    print(user)
+#def test_get_current_user():
+#    user = get_current_user_override()
+#    print(user)
 
 
 def test_create_user_success(test_user):

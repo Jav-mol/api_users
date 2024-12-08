@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from typing import Annotated
 from pymongo.collection import Collection
 from schemas.users import UserCreate, UserDB, UserOutput
@@ -14,9 +14,10 @@ router = APIRouter(
     prefix="/users"
 )
 
-def get_current_user(token: Annotated[str, Depends(oauth2)]) -> dict:
-    data = decode_token(token)
-    return data 
+def get_current_user(token: Annotated[dict, Depends(oauth2)]) -> dict:
+    data = token.get("access_token") 
+    user = decode_token(data)
+    return user 
 
 
 @router.post("")
@@ -26,8 +27,10 @@ async def create_user(user: UserCreate, db: Annotated[Collection, Depends(get_db
 
 
 @router.get("")
-async def get_users(db: Annotated[Collection, Depends(get_db_mongo)], token: Annotated[str, Depends(get_current_user)]):
-    print(token)
-    #data = decode_token(token)
+async def get_users(db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
+
+    if not user.get("role") == "user":
+        raise HTTPException(403, "Forbidden")
+    
     users = service_read_users(db=db)
     return users
