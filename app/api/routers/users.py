@@ -14,10 +14,9 @@ router = APIRouter(
     prefix="/users"
 )
 
-def get_current_user(token: Annotated[str, Depends(oauth2)]):
-    print(token)
+def get_current_user(token: Annotated[str, Depends(oauth2)]) -> dict:
     data = decode_token(token)
-    print(data)
+    return data 
 
 
 @router.post("")
@@ -27,8 +26,8 @@ async def create_user(user: UserCreate, db: Annotated[Collection, Depends(get_db
 
 
 @router.get("")
-async def get_users(db: Annotated[Collection, Depends(get_db_mongo)], token: Annotated[str, Depends(oauth2)]):
+async def get_users(db: Annotated[Collection, Depends(get_db_mongo)], token: Annotated[str, Depends(get_current_user)]):
     print(token)
-    data = decode_token(token)
+    #data = decode_token(token)
     users = service_read_users(db=db)
     return users

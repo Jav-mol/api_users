@@ -43,13 +43,13 @@ from utils.security import get_access_token
 
 
 def access_token_override():
-    data = {"sub":"Javier"}
+    data = {"sub":"Javier", "role":"user"}
     access_token = get_access_token(data=data)
     
     return {"access_token": access_token, "token_type":"bearer"}
 
 app.dependency_overrides[get_db_mongo] = db_mongo_override
-app.dependency_overrides[oauth2] = access_token_override
+app.dependency_overrides[get_current_user] = access_token_override
 
 
 @pytest.fixture
@@ -59,8 +59,8 @@ def test_user():
 
 
 def test_get_current_user():
-    token = access_token_override()
-    user = get_current_user(token)
+    access_token = access_token_override()
+    user = get_current_user(access_token.get("access_token"))
     print(user)
 
 

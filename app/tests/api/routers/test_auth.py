@@ -5,6 +5,7 @@ from api.routers.auth import router
 from db.mongodb.get_db import get_db_mongo_override, get_db_mongo
 from schemas.users import UserCreate
 from services.users_services import service_create_user
+from utils.security import decode_token
 
 import pytest
 
@@ -39,6 +40,10 @@ app.dependency_overrides[get_db_mongo] = db_mongo_override
 
 def test_login_access_success():
     response = client.post("login", data={"username":"Javier", "password":"1234"})
+    
+    #data = response.json()
+    #print(decode_token(data["access_token"]))
+    
     assert response.status_code == 200
 
 

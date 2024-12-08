@@ -25,6 +25,6 @@ async def login_access(form_data: Annotated[OAuth2PasswordRequestForm, Depends()
     if not verify_hashed_password(user_db.password, form_data.password):
         raise HTTPException(401, "Password incorrect")
     
-    access_token = get_access_token({"sub":form_data.username})
+    access_token = get_access_token({"sub":form_data.username, "role":user_db.rol})
     
     return Token(access_token=access_token)
