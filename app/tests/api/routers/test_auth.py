@@ -39,12 +39,9 @@ app.dependency_overrides[get_db_mongo] = db_mongo_override
 
 def test_login_access_success():
     response = client.post("login", data={"username":"Javier", "password":"1234"})
-    #print(response.json())
-    #print(response)
     assert response.status_code == 200
 
 
 def test_login_access_fail():
     response = client.post("login", data={"username":"Javier", "password":"4321"})
-
     assert response.status_code == 401
