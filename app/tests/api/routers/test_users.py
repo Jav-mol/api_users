@@ -48,7 +48,7 @@ def get_current_user_override():
     access_token = get_access_token(data=data)
     
     token = Token(access_token=access_token)
-    user = get_current_user(token.model_dump())
+    user = get_current_user(token)
     
     return user
 
@@ -62,13 +62,7 @@ def test_user():
     return user.model_dump()
 
 
-#def test_get_current_user():
-#    user = get_current_user_override()
-#    print(user)
-
-
 def test_create_user_success(test_user):
-
     response = client.post("/users", json=test_user)
 
     assert response.json()["id"] == 11
@@ -83,5 +77,6 @@ def test_create_user_fail():
 
 def test_get_users():
     response = client.get("/users")
-    pprint(response.json(), sort_dicts=False)
-    #assert len(response.json()) == 10
+    #pprint(response.json(), sort_dicts=False)
+    assert len(response.json()) == 10
+    assert response.status_code == 200

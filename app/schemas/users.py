@@ -31,7 +31,7 @@ class UserUpdate(BaseModel):
     email: EmailStr = None
 
 
-class UsersToList(UserDB):
+class UsersToDict(UserDB):
     password: str = Field(default=None, exclude=True)
     
     def to_dict(self):

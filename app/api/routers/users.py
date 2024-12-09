@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Annotated
 from pymongo.collection import Collection
-from schemas.users import UserCreate, UserDB, UserOutput
+from schemas.users import UserCreate, UserDB, UserOutput, UsersToDict
 from db.mongodb.get_db import get_db_mongo_override, get_db_mongo
-from db.psql.get_db import get_db_psql
 from services.users_services import service_create_user, service_read_users
 from fastapi.security import OAuth2PasswordBearer
 from utils.security import decode_token
+from api.routers.auth import Token
 
 oauth2 = OAuth2PasswordBearer(tokenUrl="login")
 
@@ -14,23 +14,24 @@ router = APIRouter(
     prefix="/users"
 )
 
-def get_current_user(token: Annotated[dict, Depends(oauth2)]) -> dict:
-    data = token.get("access_token") 
+def get_current_user(token: Annotated[Token, Depends(oauth2)]) -> dict:
+    token_dict = token.model_dump()
+    data = token_dict.get("access_token") 
     user = decode_token(data)
     return user 
 
 
-@router.post("")
+@router.post("", status_code=201,response_model=UserOutput)
 async def create_user(user: UserCreate, db: Annotated[Collection, Depends(get_db_mongo)]):
     user_created = service_create_user(user=user, db=db)
     return user_created
 
 
-@router.get("")
+@router.get("", status_code=200, response_model=list)
 async def get_users(db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
 
-    if not user.get("role") == "user":
-        raise HTTPException(403, "Forbidden")
-    
+    if not user.get("role") == "admin":
+        raise HTTPException(403, "User not authorized")
+
     users = service_read_users(db=db)
     return users

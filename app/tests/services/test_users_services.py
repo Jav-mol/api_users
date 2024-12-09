@@ -39,7 +39,7 @@ def test_create_user_db_success(collection: Collection, users_list):
 def test_create_user_db_fail(collection: Collection, users_list):
     service_create_user(collection, UserCreate(**users_list[0]))
     
-    with pytest.raises(ValueError, match="User already exist"):
+    with pytest.raises(HTTPException, match="User already exist"):
         service_create_user(collection, UserCreate(**users_list[0]))
 
 
