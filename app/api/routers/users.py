@@ -3,7 +3,7 @@ from typing import Annotated
 from pymongo.collection import Collection
 from schemas.users import UserCreate, UserDB, UserOutput, UsersToDict
 from db.mongodb.get_db import get_db_mongo_override, get_db_mongo
-from services.users_services import service_create_user, service_read_users
+from services.users_services import service_create_user, service_read_users, service_dalete_user
 from fastapi.security import OAuth2PasswordBearer
 from utils.security import decode_token
 from api.routers.auth import Token
@@ -30,8 +30,13 @@ async def create_user(user: UserCreate, db: Annotated[Collection, Depends(get_db
 @router.get("", status_code=200, response_model=list)
 async def get_users(db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
 
-    if not user.get("role") == "admin":
-        raise HTTPException(403, "User not authorized")
+    if not user.get("role") in ["user","admin"]:
+        raise HTTPException(403, "Not authorized")
 
     users = service_read_users(db=db)
     return users
+
+@router.delete("/{id}")
+async def delete_user(id: int, db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
+    user_deleted = service_dalete_user(id=id, db=db)
+    print(user_deleted)

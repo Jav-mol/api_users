@@ -64,7 +64,6 @@ def test_user():
 
 def test_create_user_success(test_user):
     response = client.post("/users", json=test_user)
-
     assert response.json()["id"] == 11
     assert response.json()["username"] == "Javi"
 
@@ -72,11 +71,17 @@ def test_create_user_success(test_user):
 def test_create_user_fail():
     user = UserCreate(username="Javier", password="1234", email="Jav@gmail.com")
     response = client.post("/users", json=user.model_dump())
-
     assert response.status_code == 401
+
 
 def test_get_users():
     response = client.get("/users")
-    #pprint(response.json(), sort_dicts=False)
     assert len(response.json()) == 10
     assert response.status_code == 200
+    #pprint(response.json(), sort_dicts=False)
+    
+
+def test_delete_user():
+    response = client.delete("/users/", json={"id":1})
+    print(response)
+    

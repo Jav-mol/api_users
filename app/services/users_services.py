@@ -67,7 +67,7 @@ def update_user(id: int, db: Collection, user: UserUpdate):
     return UserUpdate(**user_new)
 
 
-def dalete_user(id: int, db: Collection) -> int:
+def service_dalete_user(id: int, db: Collection) -> int:
     if not id_exist(collection=db, id=id):
         raise ValueError("Id not exist")
     

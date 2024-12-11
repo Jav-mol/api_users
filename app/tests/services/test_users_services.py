@@ -2,7 +2,7 @@ from services.users_services import service_create_user
 from services.users_services import service_read_users
 from services.users_services import read_user_by_username
 from services.users_services import update_user
-from services.users_services import dalete_user
+from services.users_services import service_dalete_user
 from services.users_services import delete_many_users
 
 
@@ -89,13 +89,13 @@ def test_update_user_fail(collection: Collection):
 def test_dalete_user_success(collection: Collection, users_list):
     service_create_user(collection, UserCreate(**users_list[0]))
     
-    user_deleted = dalete_user(db=collection, id=1)
+    user_deleted = service_dalete_user(db=collection, id=1)
     assert user_deleted == 1
     
     
 def test_dalete_user_fail(collection: Collection):
     with pytest.raises(ValueError, match="Id not exist"):
-        dalete_user(db=collection, id=1)
+        service_dalete_user(db=collection, id=1)
 
 
 def test_delete_many_users_success(collection: Collection, users_list):    
