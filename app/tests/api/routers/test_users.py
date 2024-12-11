@@ -79,10 +79,18 @@ def test_get_users():
     assert len(response.json()) == 10
     assert response.status_code == 200
     #pprint(response.json(), sort_dicts=False)
-    
+
 
 def test_delete_user():
-    response = client.delete(f"/users/{9}")
+    response = client.delete(f"/users/{1}")
     print(response)
     print(response.json())
+
+
+def test_update_role():
+    response = client.put(f"/users/{1}?role={'admin'}")
+    
+    print(response)
+    print(response.json())
+    
     

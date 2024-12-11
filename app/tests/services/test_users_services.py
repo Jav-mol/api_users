@@ -1,7 +1,7 @@
 from services.users_services import service_create_user
 from services.users_services import service_read_users
 from services.users_services import read_user_by_username
-from services.users_services import update_user
+from services.users_services import service_update_user
 from services.users_services import service_dalete_user
 from services.users_services import delete_many_users
 
@@ -72,7 +72,7 @@ def test_update_user_success(collection: Collection, users_list):
     
     user_new = UserUpdate(username="JAVIER", password="password_updated")
     
-    user_updated = update_user(id=1, db=collection, user=user_new)
+    user_updated = service_update_user(id=1, db=collection, user=user_new)
     
     assert user_updated.model_dump()["username"] == "JAVIER"
     
@@ -83,7 +83,7 @@ def test_update_user_success(collection: Collection, users_list):
 def test_update_user_fail(collection: Collection):
     user_new = UserUpdate(username="JAVIER", password="password_updated")
     with pytest.raises(ValueError, match="Id not exist"):
-        update_user(id=1, db=collection, user=user_new)
+        service_update_user(id=1, db=collection, user=user_new)
     
     
 def test_dalete_user_success(collection: Collection, users_list):

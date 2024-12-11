@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
-from typing import Annotated
+from typing import Annotated, Literal
 from pymongo.collection import Collection
 from schemas.users import UserCreate, UserDB, UserOutput, UsersToDict
-from db.mongodb.get_db import get_db_mongo_override, get_db_mongo
-from services.users_services import service_create_user, service_read_users, service_dalete_user
+from db.mongodb.get_db import get_db_mongo
+from services.users_services import service_create_user, service_read_users, service_dalete_user, service_update_user_role
 from fastapi.security import OAuth2PasswordBearer
 from utils.security import decode_token
 from api.routers.auth import Token
@@ -40,3 +40,11 @@ async def get_users(db: Annotated[Collection, Depends(get_db_mongo)], user: Anno
 async def delete_user(id: int, db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
     id_user_deleted = service_dalete_user(id=id, db=db)
     return {"User deleted":id_user_deleted}
+
+
+@router.put("/{id}")
+async def update_role(id: int, role: Literal["admin", "user"], db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
+    
+    user = service_update_user_role(id=id, role=role, db=db)
+    
+    return user

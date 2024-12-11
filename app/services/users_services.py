@@ -48,9 +48,9 @@ def read_user_by_username(db: Collection, username: str) -> UsersToDict:
     return UsersToDict(**user)
 
 
-def update_user(id: int, db: Collection, user: UserUpdate):
+def service_update_user(id: int, db: Collection, user: UserUpdate):
     if not id_exist(collection=db, id=id):
-        raise ValueError("Id not exist")
+        raise HTTPException(404,"Id not exist")
     
     user_old = get_user_by_id_db(collection=db, id=id)
     if not user.username:
@@ -69,7 +69,7 @@ def update_user(id: int, db: Collection, user: UserUpdate):
 
 def service_dalete_user(id: int, db: Collection) -> int:
     if not id_exist(collection=db, id=id):
-        raise ValueError("Id not exist")
+        raise HTTPException(404,"Id not exist")
     
     user_deleted = get_user_by_id_db(collection=db, id=id)
     user_deleted["id"] = user_deleted.pop("_id")
@@ -84,3 +84,13 @@ def delete_many_users(ids: list[int], db: Collection):
         
     count_users_deleted = delete_many_users_db(collection=db, ids=ids)
     return count_users_deleted
+
+
+def service_update_user_role(id: int, role: str, db: Collection):
+    if not id_exist(collection=db, id=id):
+        raise HTTPException(404,"Id not exist")
+    user = get_user_by_id_db(collection=db, id=id)
+    
+    user["rol"] = role
+    print(user)
+    
