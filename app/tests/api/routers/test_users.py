@@ -82,6 +82,7 @@ def test_get_users():
     
 
 def test_delete_user():
-    response = client.delete("/users/", json={"id":1})
+    response = client.delete(f"/users/{9}")
     print(response)
+    print(response.json())
     

@@ -71,7 +71,9 @@ def service_dalete_user(id: int, db: Collection) -> int:
     if not id_exist(collection=db, id=id):
         raise ValueError("Id not exist")
     
-    user_deleted = delete_user_db(collection=db, id=id)
+    user_deleted = get_user_by_id_db(collection=db, id=id)
+    user_deleted["id"] = user_deleted.pop("_id")
+    row_deleted = delete_user_db(collection=db, id=id)
     return user_deleted
 
 

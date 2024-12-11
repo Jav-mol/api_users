@@ -36,7 +36,7 @@ async def get_users(db: Annotated[Collection, Depends(get_db_mongo)], user: Anno
     users = service_read_users(db=db)
     return users
 
-@router.delete("/{id}")
+@router.delete("/{id}", response_model=dict[str,UserOutput])
 async def delete_user(id: int, db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
-    user_deleted = service_dalete_user(id=id, db=db)
-    print(user_deleted)
+    id_user_deleted = service_dalete_user(id=id, db=db)
+    return {"User deleted":id_user_deleted}
