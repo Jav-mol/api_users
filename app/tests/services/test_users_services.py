@@ -4,7 +4,7 @@ from services.users_services import read_user_by_username
 from services.users_services import service_update_user
 from services.users_services import service_dalete_user
 from services.users_services import delete_many_users
-
+from services.users_services import service_update_user_role
 
 from fastapi import HTTPException
 from utils.security import verify_hashed_password
@@ -108,3 +108,12 @@ def test_delete_many_users_fail(collection: Collection, users_list):
     service_create_user(collection, UserCreate(**users_list[0]))
     with pytest.raises(ValueError, match="Id not exist"):
         delete_many_users(db=collection, ids=[1,2])
+
+
+def test_update_role(collection: Collection, users_list):
+    service_create_user(collection, UserCreate(**users_list[0]))
+
+    user_updated = service_update_user_role(id=1, role="admin", db=collection)
+    user_db = read_user_by_username(db=collection, username="Javier")
+
+    assert user_updated["rol"] == user_db.rol

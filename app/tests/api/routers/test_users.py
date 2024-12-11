@@ -89,8 +89,6 @@ def test_delete_user():
 
 def test_update_role():
     response = client.put(f"/users/{1}?role={'admin'}")
-    
-    print(response)
-    print(response.json())
-    
-    
+
+    assert response.status_code == 200
+    assert response.json()["rol"] == "admin"
