@@ -46,7 +46,7 @@ def get_users_db(collection: Collection) -> list[dict]:
 
 # --- UPDATE ---
 def update_user_db(collection: Collection, user: dict, id: int) -> dict:
-    collection.update_one({"_id":id}, {"$set": {"username":user["username"], "password":user["password"], "email":user["email"]}})
+    collection.update_one({"_id":id}, {"$set": {"username":user["username"], "rol":user["rol"],"password":user["password"], "email":user["email"]}})
     return collection.find_one({"_id":id})
 
 # --- DELETE ---

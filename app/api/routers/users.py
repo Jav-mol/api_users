@@ -44,7 +44,7 @@ async def delete_user(id: int, db: Annotated[Collection, Depends(get_db_mongo)],
 
 @router.put("/{id}")
 async def update_role(id: int, role: Literal["admin", "user"], db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
-    
+
     user = service_update_user_role(id=id, role=role, db=db)
-    
+
     return user

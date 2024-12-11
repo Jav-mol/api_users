@@ -69,39 +69,37 @@ def test_read_user_by_username_fail(collection: Collection):
 
 def test_update_user_success(collection: Collection, users_list):
     service_create_user(collection, UserCreate(**users_list[0]))
-    
+
     user_new = UserUpdate(username="JAVIER", password="password_updated")
-    
     user_updated = service_update_user(id=1, db=collection, user=user_new)
-    
-    assert user_updated.model_dump()["username"] == "JAVIER"
-    
     new_password = user_updated.model_dump()["password"]
+
+    assert user_updated.model_dump()["username"] == "JAVIER"
     assert verify_hashed_password(new_password, "password_updated") == True
-    
-    
+
+
 def test_update_user_fail(collection: Collection):
     user_new = UserUpdate(username="JAVIER", password="password_updated")
-    with pytest.raises(ValueError, match="Id not exist"):
+    with pytest.raises(HTTPException, match="Id not exist"):
         service_update_user(id=1, db=collection, user=user_new)
-    
-    
+
+
 def test_dalete_user_success(collection: Collection, users_list):
-    service_create_user(collection, UserCreate(**users_list[0]))
+    user_created = service_create_user(collection, UserCreate(**users_list[0]))
     
     user_deleted = service_dalete_user(db=collection, id=1)
-    assert user_deleted == 1
-    
-    
+    assert user_deleted["username"] == user_created.username
+
+
 def test_dalete_user_fail(collection: Collection):
-    with pytest.raises(ValueError, match="Id not exist"):
+    with pytest.raises(HTTPException, match="Id not exist"):
         service_dalete_user(db=collection, id=1)
 
 
 def test_delete_many_users_success(collection: Collection, users_list):    
     service_create_user(collection, UserCreate(**users_list[0]))
     service_create_user(collection, UserCreate(**users_list[1]))
-        
+
     count_users_deleted = delete_many_users(db=collection, ids=[1,2])
     assert count_users_deleted == 2
 

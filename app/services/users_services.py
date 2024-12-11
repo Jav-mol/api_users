@@ -89,8 +89,11 @@ def delete_many_users(ids: list[int], db: Collection):
 def service_update_user_role(id: int, role: str, db: Collection):
     if not id_exist(collection=db, id=id):
         raise HTTPException(404,"Id not exist")
+
     user = get_user_by_id_db(collection=db, id=id)
-    
     user["rol"] = role
-    print(user)
-    
+
+    user_updated = update_user_db(collection=db, user=user, id=id)
+    user_updated["id"] = user_updated.pop("_id")
+
+    return user_updated
