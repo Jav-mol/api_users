@@ -1,13 +1,12 @@
 from fastapi.testclient import TestClient
-from fastapi import FastAPI, HTTPException
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import FastAPI
 from pprint import pprint 
 
 
 from api.routers.users import router
 
 from api.routers.auth import Token
-from api.routers.users import oauth2, get_current_user
+from api.routers.users import  get_current_user
 from schemas.users import UserCreate, UserDB, UserOutput
 from services.users_services import service_create_user
 from db.mongodb.get_db import get_db_mongo, get_db_mongo_override
@@ -83,8 +82,8 @@ def test_get_users():
 
 def test_delete_user():
     response = client.delete(f"/users/{1}")
-    print(response)
-    print(response.json())
+    assert response.status_code == 200
+    assert response.json()["User deleted"] == {"id":1,"username":"Javier"}
 
 
 def test_update_role():

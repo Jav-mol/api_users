@@ -30,14 +30,20 @@ async def create_user(user: UserCreate, db: Annotated[Collection, Depends(get_db
 @router.get("", status_code=200, response_model=list)
 async def get_users(db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
 
-    if not user.get("role") in ["user","admin"]:
-        raise HTTPException(403, "Not authorized")
-
     users = service_read_users(db=db)
     return users
 
+
+@router.get("/{id}")
+async def get_user_data(db_psql: str, db_mongo: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
+        pass
+
+
 @router.delete("/{id}", response_model=dict[str,UserOutput])
 async def delete_user(id: int, db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
+    if not user.get("role") == "admin":
+        raise HTTPException(403, "Not authorized")
+
     id_user_deleted = service_dalete_user(id=id, db=db)
     return {"User deleted":id_user_deleted}
 
