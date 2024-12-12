@@ -47,23 +47,18 @@ def connection():
         
         for book in books:
             insert_book_db(db=connect, book=Book(**book))
-        
+
         yield connect
 
 
 def test_insert_user_book_db(connection: Connection):#, users_books_list: list):
-    
     book_dict = UserBook(book_id=1, user_id=1)
     user_book_db = insert_user_book_db(db=connection, user_book=book_dict)
-
     assert user_book_db == 1
 
 
 def test_read_users_books_db(connection: Connection):
     users_books_db = read_users_books_by_user_id(db=connection, user_id=1)
-
-    print()
-    pprint(users_books_db)
     assert len(users_books_db) == 2
 
 

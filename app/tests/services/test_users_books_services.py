@@ -43,10 +43,10 @@ def connection():
     with db as connect:       
         for user_book in users_books_list:
             insert_user_book_db(db=connect, user_book=UserBook(**user_book))
-        
+
         for book in books:
             insert_book_db(db=connect, book=Book(**book))
-        
+
         yield connect
 
 def test_insert_book_db(connection: Connection):
