@@ -7,6 +7,7 @@ from schemas.users_books import UserBook
 
 from sqlalchemy import Connection
 from pymongo.collection import Collection
+from fastapi import HTTPException
 
 
 def insert_user_book(db: Connection, user_id: int ,book_id: int):

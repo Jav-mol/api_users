@@ -1,2 +1,2 @@
 # api_users
-A crud api for users
+A crud api for api users
