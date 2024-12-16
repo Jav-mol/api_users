@@ -27,6 +27,7 @@ class UserOutput(BaseModel):
 
 class UserUpdate(BaseModel):
     username: str = None
+    rol: str = None
     password: str = None
     email: EmailStr = None
 

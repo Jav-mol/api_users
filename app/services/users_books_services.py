@@ -11,13 +11,16 @@ from pymongo.collection import Collection
 from fastapi import HTTPException
 
 
-def insert_user_book(db: Connection, user_id: int ,book_id: int):
+def insert_user_book(db_psql: Connection, db_mongo: Collection, user_id: int ,book_id: int):
     user_book = UserBook(user_id=user_id, book_id=book_id)
-    if check_user_book_exist(db=db, book_id=user_book.book_id, user_id=user_book.user_id):
-        raise ValueError("User-book already exists")
-    print(read_book_db_by_id(db=db, id=user_book.book_id))
-    
-    insert_user_book_db(db=db, user_book=user_book)    
+    if check_user_book_exist(db=db_psql, book_id=user_book.book_id, user_id=user_book.user_id):
+        raise HTTPException(404, "User-book already exists")
+    if not read_book_db_by_id(db=db_psql, id=user_book.book_id):
+        raise HTTPException(404, "Book not exists")
+    if not get_user_by_id_db(collection=db_mongo, id=user_book.user_id):
+        raise HTTPException(404, "User not exists")
+        
+    insert_user_book_db(db=db_psql, user_book=user_book)    
     return user_book
 
 

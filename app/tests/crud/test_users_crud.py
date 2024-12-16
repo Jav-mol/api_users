@@ -29,7 +29,6 @@ def collection():
 
 
 def test_next_id(collection: Collection, users_dict):
-    
     result = next_id(collection)
     assert result == 1
 
@@ -114,7 +113,7 @@ def test_get_users(collection: Collection, users_dict):
 def test_update_user_success(collection: Collection, users_dict):       
     collection.insert_many(users_dict)
 
-    new_user = {"username":"Javier", "password":"1234", "email":"javi@gmail.com"}
+    new_user = {"username":"Javier", "rol":"user","password":"1234", "email":"javi@gmail.com"}
     result = update_user_db(collection, new_user, 1)
 
     assert result["username"] == "Javier"
@@ -124,7 +123,7 @@ def test_update_user_success(collection: Collection, users_dict):
 
 def test_update_user_fail(collection: Collection):       
 
-    new_user = {"username":"Javier", "password":"1234", "email":"javi@gmail.com"}
+    new_user = {"username":"Javier", "rol":"user","password":"1234", "email":"javi@gmail.com"}
     result = update_user_db(collection, new_user, 1)
 
     assert result == None

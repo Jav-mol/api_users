@@ -55,6 +55,8 @@ def service_update_user(id: int, db: Collection, user: UserUpdate):
     user_old = get_user_by_id_db(collection=db, id=id)
     if not user.username:
         user.username = user_old["username"]
+    if not user.rol: 
+        user.rol = user_old["rol"]
     if not user.email:
         user.email = user_old["email"]
     if not user.password:
