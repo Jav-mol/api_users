@@ -3,6 +3,8 @@ from services.users_books_services import insert_user_book
 from crud.users_books import insert_user_book_db
 from crud.books import insert_book_db
 
+from services.users_books_services import insert_user_book
+
 from db.psql.get_db import get_db__psql_override
 from db.mongodb.get_db import get_db_mongo_override
 
@@ -51,4 +53,7 @@ def connection():
         yield connect
 
 def test_insert_book_db(connection: Connection):
-    pass    
+    user_book = insert_user_book(db=connection, user_id=1, book_id=1)
+    
+    print(user_book)
+    
