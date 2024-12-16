@@ -13,6 +13,7 @@ from schemas.users import UserCreate
 
 from pymongo.collection import Collection
 from sqlalchemy import Connection
+from fastapi import HTTPException
 from pprint import pprint
 import pytest
 
@@ -74,8 +75,18 @@ def db_mongo():
     return db
 
 
-def test_insert_book_db(db_psql: Connection, db_mongo: Collection):
+def test_insert_book_db_success(db_psql: Connection, db_mongo: Collection):
     user_book = insert_user_book(db_psql=db_psql, db_mongo=db_mongo, user_id=1, book_id=10)
-    
-    print(user_book)
-    
+
+    assert user_book.book_id == 10
+    assert user_book.user_id == 1
+
+
+def test_insert_book_db_fail_user(db_psql: Connection, db_mongo: Collection):
+    with pytest.raises(HTTPException, match="User not exists"):
+        user_book = insert_user_book(db_psql=db_psql, db_mongo=db_mongo, user_id=11, book_id=10)
+
+
+def test_insert_book_db_fail_book(db_psql: Connection, db_mongo: Collection):
+    with pytest.raises(HTTPException, match="Book not exists"):
+        user_book = insert_user_book(db_psql=db_psql, db_mongo=db_mongo, user_id=1, book_id=11)
