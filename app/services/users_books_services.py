@@ -24,11 +24,11 @@ def insert_user_book(db_psql: Connection, db_mongo: Collection, user_id: int ,bo
     return user_book
 
 
-def read_user_book_by_id(db_mongo: Collection, db_psql: Connection, id: int):
-    user = get_user_by_id_db(collection=db_mongo, id=id)
+def read_user_book_by_id(db_mongo: Collection, db_psql: Connection, id_user: int):
+    user = get_user_by_id_db(collection=db_mongo, id=id_user)
     
     print(user)
     
-    user_book = read_users_books_by_user_id(db=db_psql, user_id=id)
+    user_book = read_users_books_by_user_id(db=db_psql, user_id=id_user)
     
     print(user_book)

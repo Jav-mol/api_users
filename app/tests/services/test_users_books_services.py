@@ -1,7 +1,7 @@
 from crud.users_books import insert_user_book_db
 from crud.books import insert_book_db
 
-from services.users_books_services import insert_user_book
+from services.users_books_services import insert_user_book, read_user_book_by_id
 from services.users_services import service_create_user
 
 from db.psql.get_db import get_db__psql_override
@@ -90,3 +90,8 @@ def test_insert_book_db_fail_user(db_psql: Connection, db_mongo: Collection):
 def test_insert_book_db_fail_book(db_psql: Connection, db_mongo: Collection):
     with pytest.raises(HTTPException, match="Book not exists"):
         user_book = insert_user_book(db_psql=db_psql, db_mongo=db_mongo, user_id=1, book_id=11)
+
+
+def test_read_user_book_by_id(db_psql: Connection, db_mongo: Collection):
+    user = read_user_book_by_id(db_psql=db_psql, db_mongo=db_mongo, id_user=1)
+    
