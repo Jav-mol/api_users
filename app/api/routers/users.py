@@ -1,12 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException
-from typing import Annotated, Literal
-from pymongo.collection import Collection
+from fastapi.security import OAuth2PasswordBearer
+
+from api.routers.auth import Token
 from schemas.users import UserCreate, UserDB, UserOutput, UsersToDict
 from db.mongodb.get_db import get_db_mongo
+from db.psql.get_db import get_db_psql
 from services.users_services import service_create_user, service_read_users, service_dalete_user, service_update_user_role
-from fastapi.security import OAuth2PasswordBearer
+from crud.users_books import delete_user_book
+
+from sqlalchemy import Connection
+from pymongo.collection import Collection
+from typing import Annotated, Literal
 from utils.security import decode_token
-from api.routers.auth import Token
 
 oauth2 = OAuth2PasswordBearer(tokenUrl="login")
 
@@ -40,17 +45,17 @@ async def get_user_data(db_psql: str, db_mongo: Annotated[Collection, Depends(ge
 
 
 @router.delete("/{id}", response_model=dict[str,UserOutput])
-async def delete_user(id: int, db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
+async def delete_user(id: int, db_psql: Annotated[Connection, Depends(get_db_psql)],db_mongo: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
     if not user.get("role") == "admin":
         raise HTTPException(403, "Not authorized")
 
-    id_user_deleted = service_dalete_user(id=id, db=db)
+    id_user_deleted = service_dalete_user(id=id, db=db_mongo)
+    user_book = delete_user_book(db=db_psql, user_id=id)
+
     return {"User deleted":id_user_deleted}
 
 
 @router.put("/{id}")
 async def update_role(id: int, role: Literal["admin", "user"], db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
-
     user = service_update_user_role(id=id, role=role, db=db)
-
     return user

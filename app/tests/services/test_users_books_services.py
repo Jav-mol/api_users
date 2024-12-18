@@ -32,6 +32,7 @@ books = [
         ]
 
 users_books_list = [
+                {"book_id":6,"user_id":1},
                 {"book_id":1,"user_id":1},
                 {"book_id":1,"user_id":2},
                 {"book_id":2,"user_id":1},
@@ -92,6 +93,11 @@ def test_insert_book_db_fail_book(db_psql: Connection, db_mongo: Collection):
         user_book = insert_user_book(db_psql=db_psql, db_mongo=db_mongo, user_id=1, book_id=11)
 
 
-def test_read_user_book_by_id(db_psql: Connection, db_mongo: Collection):
-    user = read_user_book_by_id(db_psql=db_psql, db_mongo=db_mongo, id_user=11)
-    
+def test_read_user_book_by_id_success(db_psql: Connection, db_mongo: Collection):
+    user = read_user_book_by_id(db_psql=db_psql, db_mongo=db_mongo, id_user=1)
+    assert user.id == 1
+
+
+def test_read_user_book_by_id_fail(db_psql: Connection, db_mongo: Collection):
+    with pytest.raises(HTTPException, match="User not exists"):
+        user = read_user_book_by_id(db_psql=db_psql, db_mongo=db_mongo, id_user=11)

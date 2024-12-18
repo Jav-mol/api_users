@@ -1,5 +1,7 @@
-from crud.users_books import check_user_book_exist, read_users_books_by_user_id
-from crud.users_books import insert_user_book_db, get_books_by_id_user
+from crud.users_books import check_user_book_exist
+from crud.users_books import insert_user_book_db
+from crud.users_books import get_books_by_id_user
+from crud.users_books import delete_user_book
 
 from crud.users import get_user_by_id_db
 from crud.books import read_book_db_by_id
@@ -19,21 +21,21 @@ def insert_user_book(db_psql: Connection, db_mongo: Collection, user_id: int ,bo
         raise HTTPException(404, "Book not exists")
     if not get_user_by_id_db(collection=db_mongo, id=user_book.user_id):
         raise HTTPException(404, "User not exists")
-        
+
     insert_user_book_db(db=db_psql, user_book=user_book)    
     return user_book
 
 
-def read_user_book_by_id(db_mongo: Collection, db_psql: Connection, id_user: int):
+def read_user_book_by_id(db_mongo: Collection, db_psql: Connection, id_user: int) -> UserBookDict:
     if not get_user_by_id_db(collection=db_mongo, id=id_user):
         raise HTTPException(404, "User not exists")
-    
+
     user_db = get_user_by_id_db(collection=db_mongo, id=id_user)
     user_db["id"] = user_db.pop("_id")
 
     books = get_books_by_id_user(db=db_psql, user_id=id_user)
     user_db["books"] = books
-    
+
     user_book = UserBookDict(**user_db)
-    
-    pprint(user_book.model_dump(), sort_dicts=False)
+
+    return user_book

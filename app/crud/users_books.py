@@ -17,18 +17,14 @@ def read_users_books_by_user_id(db: Connection, user_id: int) -> list:
 
 def check_user_book_exist(db: Connection, user_id: int, book_id: int) -> bool:
     user_book_exist = db.execute(users_books.select().where(users_books.c.user_id == user_id, users_books.c.book_id == book_id)).fetchall()
-    
     return bool(user_book_exist)
 
 
 def delete_user_book(db: Connection, user_id: int) -> int:
     user_book_deleted = db.execute(users_books.delete().where(users_books.c.user_id == user_id))
-    
     return user_book_deleted.rowcount
 
 
 def get_books_by_id_user(db: Connection, user_id: int) -> dict:
     books_db = db.execute(select(books.c.id, books.c.author, books.c.title).join(books, users_books.c.book_id == books.c.id).where(users_books.c.user_id == user_id)).mappings()
-    
     return [books for books in books_db]
-    

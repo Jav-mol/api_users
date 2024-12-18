@@ -59,8 +59,8 @@ def test_read_book_by_id(connection: Connection, books_list: list):
     
     book = read_book_db_by_id(db=connection, id=1)
 
-    print(book)
-
+    assert book[0]["id"] == 1
+    
 def test_delete_book_db(connection: Connection, books_list: list):
     insert_book_db(db=connection, book=Book(**books_list[0]))
     

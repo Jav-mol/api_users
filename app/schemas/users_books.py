@@ -14,4 +14,4 @@ class UserBookDict(BaseModel):
     username: str
     rol: str
     created_at: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    books: list = None
+    books: list[Book] = []

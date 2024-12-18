@@ -10,6 +10,7 @@ from api.routers.users import  get_current_user
 from schemas.users import UserCreate, UserDB, UserOutput
 from services.users_services import service_create_user
 from db.mongodb.get_db import get_db_mongo, get_db_mongo_override
+from db.psql.get_db import get_db_psql, get_db__psql_override
 
 import pytest
 
@@ -53,7 +54,7 @@ def get_current_user_override():
 
 app.dependency_overrides[get_db_mongo] = db_mongo_override
 app.dependency_overrides[get_current_user] = get_current_user_override
-
+app.dependency_overrides[get_db_psql] = get_db__psql_override
 
 @pytest.fixture
 def test_user():
