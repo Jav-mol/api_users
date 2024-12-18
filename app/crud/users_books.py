@@ -25,3 +25,10 @@ def delete_user_book(db: Connection, user_id: int) -> int:
     user_book_deleted = db.execute(users_books.delete().where(users_books.c.user_id == user_id))
     
     return user_book_deleted.rowcount
+
+
+def get_books_by_id_user(db: Connection, user_id: int) -> dict:
+    books_db = db.execute(select(books.c.id, books.c.author, books.c.title).join(books, users_books.c.book_id == books.c.id).where(users_books.c.user_id == user_id)).mappings()
+    
+    return [books for books in books_db]
+    

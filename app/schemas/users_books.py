@@ -9,9 +9,9 @@ class UserBook(BaseModel):
 
 
 
-class User(BaseModel):
+class UserBookDict(BaseModel):
     id: int
     username: str
     rol: str
     created_at: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    books: list[Book]
+    books: list = None

@@ -1,15 +1,15 @@
 from crud.users_books import check_user_book_exist, read_users_books_by_user_id
-from crud.users_books import insert_user_book_db
+from crud.users_books import insert_user_book_db, get_books_by_id_user
 
 from crud.users import get_user_by_id_db
 from crud.books import read_book_db_by_id
 
-from schemas.users_books import UserBook
+from schemas.users_books import UserBook, UserBookDict
 
 from sqlalchemy import Connection
 from pymongo.collection import Collection
 from fastapi import HTTPException
-
+from pprint import pprint
 
 def insert_user_book(db_psql: Connection, db_mongo: Collection, user_id: int ,book_id: int):
     user_book = UserBook(user_id=user_id, book_id=book_id)
@@ -25,10 +25,12 @@ def insert_user_book(db_psql: Connection, db_mongo: Collection, user_id: int ,bo
 
 
 def read_user_book_by_id(db_mongo: Collection, db_psql: Connection, id_user: int):
-    user = get_user_by_id_db(collection=db_mongo, id=id_user)
+    user_db = get_user_by_id_db(collection=db_mongo, id=id_user)
+    user_db["id"] = user_db.pop("_id")
+
+    books = get_books_by_id_user(db=db_psql, user_id=id_user)
+    user_db["books"] = books
     
-    print(user)
+    user_book = UserBookDict(**user_db)
     
-    user_book = read_users_books_by_user_id(db=db_psql, user_id=id_user)
-    
-    print(user_book)
+    pprint(user_book.model_dump(), sort_dicts=False)

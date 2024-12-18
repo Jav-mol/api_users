@@ -93,5 +93,5 @@ def test_insert_book_db_fail_book(db_psql: Connection, db_mongo: Collection):
 
 
 def test_read_user_book_by_id(db_psql: Connection, db_mongo: Collection):
-    user = read_user_book_by_id(db_psql=db_psql, db_mongo=db_mongo, id_user=1)
+    user = read_user_book_by_id(db_psql=db_psql, db_mongo=db_mongo, id_user=11)
     
