@@ -25,6 +25,9 @@ def insert_user_book(db_psql: Connection, db_mongo: Collection, user_id: int ,bo
 
 
 def read_user_book_by_id(db_mongo: Collection, db_psql: Connection, id_user: int):
+    if not get_user_by_id_db(collection=db_mongo, id=id_user):
+        raise HTTPException(404, "User not exists")
+    
     user_db = get_user_by_id_db(collection=db_mongo, id=id_user)
     user_db["id"] = user_db.pop("_id")
 
