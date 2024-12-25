@@ -26,14 +26,14 @@ url_test = "sqlite:///:memory:"
 
 @contextmanager
 def get_db__psql_override():
-    engine = create_engine(url_test)
+    engine = create_engine(url_test, connect_args={"check_same_thread": False})
     connection = engine.connect()    
     try:
         metadata.create_all(engine)
         yield connection
         connection.commit()
     except Exception as e:
-        raise f"Error: {e}"
+        raise e
     finally:
         connection.close()
 

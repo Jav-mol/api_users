@@ -46,6 +46,7 @@ async def get_user_data(db_psql: str, db_mongo: Annotated[Collection, Depends(ge
 
 @router.delete("/{id}", response_model=dict[str,UserOutput])
 async def delete_user(id: int, db_psql: Annotated[Connection, Depends(get_db_psql)],db_mongo: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
+    
     if not user.get("role") == "admin":
         raise HTTPException(403, "Not authorized")
 
