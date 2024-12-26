@@ -138,3 +138,12 @@ def test_update_role():
 
     assert response.status_code == 200
     assert response.json()["rol"] == "admin"
+
+
+def test_get_user():
+    
+    response = client.get(f"/users/{2}")
+    
+    assert response.status_code == 200
+    assert response.json()["username"] == "Azul"
+    #pprint(response.json(), sort_dicts=False)

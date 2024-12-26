@@ -3,9 +3,13 @@ from fastapi.security import OAuth2PasswordBearer
 
 from api.routers.auth import Token
 from schemas.users import UserCreate, UserDB, UserOutput, UsersToDict
+
 from db.mongodb.get_db import get_db_mongo
 from db.psql.get_db import get_db_psql
+
 from services.users_services import service_create_user, service_read_users, service_dalete_user, service_update_user_role
+from services.users_books_services import read_user_book_by_id
+
 from crud.users_books import delete_user_book
 
 from sqlalchemy import Connection
@@ -40,8 +44,13 @@ async def get_users(db: Annotated[Collection, Depends(get_db_mongo)], user: Anno
 
 
 @router.get("/{id}")
-async def get_user_data(db_psql: str, db_mongo: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
-        pass
+async def get_user_data(id: int, db_psql: Annotated[Connection,Depends(get_db_psql)], db_mongo: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
+        if not user.get("role") == "admin":
+            raise HTTPException(403, "Not authorized")
+
+        user_by_id = read_user_book_by_id(db_mongo=db_mongo, db_psql=db_psql, id_user=id)
+        
+        return user_by_id
 
 
 @router.delete("/{id}", response_model=dict[str,UserOutput])
