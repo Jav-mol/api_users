@@ -29,5 +29,6 @@ def decode_token(token: str):
     try:
         data = jwt.decode(token , setting.secret_key, setting.algorithm)
     except Exception as e:
+        print("Hola")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Token")
     return data 
