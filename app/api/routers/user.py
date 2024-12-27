@@ -7,7 +7,7 @@ from schemas.users import UserCreate, UserDB, UserOutput, UsersToDict
 from db.mongodb.get_db import get_db_mongo
 from db.psql.get_db import get_db_psql
 
-from services.users_services import service_create_user, service_read_users, service_dalete_user, service_update_user_role
+from services.users_services import service_create_user, service_dalete_user, read_user_by_username
 from services.users_books_services import read_user_book_by_id
 
 from crud.users_books import delete_user_book
@@ -33,6 +33,6 @@ def get_current_user(token: Annotated[Token, Depends(oauth2)]) -> dict:
 @router.get("", status_code=200)
 async def get_user(db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
 
-    print("hola")
+    current_user = read_user_by_username(db=db, username=user.get("sub"))
     
-    return user
+    return current_user
