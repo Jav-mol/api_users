@@ -20,7 +20,7 @@ from utils.security import decode_token
 oauth2 = OAuth2PasswordBearer(tokenUrl="login")
 
 router = APIRouter(
-    prefix="/user2"
+    prefix="/user"
 )
 
 def get_current_user(token: Annotated[Token, Depends(oauth2)]) -> dict:
@@ -32,7 +32,9 @@ def get_current_user(token: Annotated[Token, Depends(oauth2)]) -> dict:
 
 @router.get("", status_code=200)
 async def get_user(db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
-
     current_user = read_user_by_username(db=db, username=user.get("sub"))
-    
     return current_user
+
+@router.put("")
+async def update_user(user_update: UserCreate, db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
+    pass

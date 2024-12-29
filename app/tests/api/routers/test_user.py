@@ -103,9 +103,8 @@ app.dependency_overrides[get_db_psql] = get_db_psql_override_2
 
 
 def test_get_user_2():
-    response = client.get("/user2")
-    #assert len(response.json()) == 10
-    #assert response.status_code == 200
-    pprint(response.json(), sort_dicts=False)
+    response = client.get("/user")
+    assert response.status_code == 200
+    assert response.json()["username"] == "Javier"
 
 
