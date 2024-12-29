@@ -52,7 +52,7 @@ def db_mongo_override():
 
 
 def get_current_user_override():
-    data = {"sub":"Javier", "role":"user"}
+    data = {"sub":"Javier", "role":"user", "id":1}
     access_token = get_access_token(data=data)
     token = Token(access_token=access_token)
     user = get_current_user(token)
@@ -102,9 +102,13 @@ app.dependency_overrides[get_current_user] = get_current_user_override
 app.dependency_overrides[get_db_psql] = get_db_psql_override_2
 
 
-def test_get_user_2():
+def test_get_user():
     response = client.get("/user")
     assert response.status_code == 200
     assert response.json()["username"] == "Javier"
 
 
+def test_update_user():
+    response = client.put("/user", json={"username":"Javier2", "email":"jav2.molh@gmail.com", "password":"1234"})
+    
+    print(response.json())
