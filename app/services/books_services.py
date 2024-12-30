@@ -5,7 +5,7 @@ from crud.books import check_book_exists, read_books_db, read_book_db_by_id
 from crud.books import insert_book_db
 from crud.books import delete_book_db
 
-def create_book(db: Collection, book: Book) -> Book:
+def create_book(db: Collection, book: Book) -> list:
     if not(check_book_exists(db=db, book=book)):
         book_id = insert_book_db(db=db, book=book)
         book_created = read_book_db_by_id(db=db, id=book_id)

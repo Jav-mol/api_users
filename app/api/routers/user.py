@@ -57,8 +57,12 @@ async def get_all_book_for_user(user: Annotated[dict, Depends(get_current_user)]
     return books
 
 
-@router.post("/books", status_code=201, response_model=Book)
+@router.post("/books", status_code=200, response_model=Book)
 async def create_book_router(book: Book, user: Annotated[dict, Depends(get_current_user)], db_psql: Annotated[Connection, Depends(get_db_psql)]):
     book = create_book(db=db_psql, book=book)
-    
-    return book.model_dump()
+    return book[0]
+
+
+@router.delete("/books", status_code=200)
+async def delete_book_router():
+    pass
