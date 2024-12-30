@@ -3,14 +3,16 @@ from fastapi.security import OAuth2PasswordBearer
 
 from api.routers.auth import Token
 from schemas.users import UserCreate, UserDB, UserOutput, UsersToDict, UserUpdate
+from schemas.books import Book, BookDate
 
 from db.mongodb.get_db import get_db_mongo
 from db.psql.get_db import get_db_psql
 
-from services.users_services import service_create_user, service_dalete_user, read_user_by_username, service_update_user
+from services.users_services import service_dalete_user, read_user_by_username, service_update_user
 from services.users_books_services import read_user_book_by_id
+from services.books_services import create_book
 
-from crud.users_books import delete_user_book
+from crud.users_books import delete_user_book, get_books_by_id_user
 
 from sqlalchemy import Connection
 from pymongo.collection import Collection
@@ -47,3 +49,16 @@ async def update_user(user_update: UserCreate, db: Annotated[Collection, Depends
 async def delete_user(db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
     user_deleted = service_dalete_user(user["id"], db=db)
     return user_deleted
+
+
+@router.get("/books", status_code=200, response_model=list[Book])
+async def get_all_book_for_user(user: Annotated[dict, Depends(get_current_user)], db_psql: Annotated[Connection, Depends(get_db_psql)]):
+    books = get_books_by_id_user(db=db_psql, user_id=user["id"])
+    return books
+
+
+@router.post("/books", status_code=201, response_model=Book)
+async def create_book_router(book: Book, user: Annotated[dict, Depends(get_current_user)], db_psql: Annotated[Connection, Depends(get_db_psql)]):
+    book = create_book(db=db_psql, book=book)
+    
+    return book.model_dump()

@@ -53,7 +53,7 @@ async def get_user_data(id: int, db_psql: Annotated[Connection,Depends(get_db_ps
         return user_by_id
 
 
-@router.delete("/{id}", response_model=dict[str,UserOutput])
+@router.delete("/{id}", status_code=200, response_model=dict[str,UserOutput])
 async def delete_user(id: int, db_psql: Annotated[Connection, Depends(get_db_psql)],db_mongo: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
     
     if not user.get("role") == "admin":
@@ -65,7 +65,7 @@ async def delete_user(id: int, db_psql: Annotated[Connection, Depends(get_db_psq
     return {"User deleted":id_user_deleted}
 
 
-@router.put("/{id}")
+@router.put("/{id}", status_code=200, response_model=UsersToDict)
 async def update_role(id: int, role: Literal["admin", "user"], db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
     user = service_update_user_role(id=id, role=role, db=db)
     return user

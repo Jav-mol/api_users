@@ -93,6 +93,8 @@ users_books_list = [
                 {"book_id":2,"user_id":1},
                 {"book_id":3,"user_id":2},
                 {"book_id":4,"user_id":3},
+                {"book_id":7,"user_id":1},
+                {"book_id":9,"user_id":1},
                 {"book_id":5,"user_id":3}
             ]
 
@@ -121,3 +123,12 @@ def test_delete_user():
     assert response.json()["username"] == "Javier"
 
 
+def test_get_books_current_user():
+    response = client.get("/user/books")
+    assert len(response.json()) == 4
+
+
+def test_create_books_current_user():
+    response = client.post("/user/books", json={"title":"book1", "author":"author1"})
+    print()
+    pprint(response.json(), sort_dicts=False)

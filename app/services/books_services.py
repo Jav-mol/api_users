@@ -8,7 +8,8 @@ from crud.books import delete_book_db
 def create_book(db: Collection, book: Book) -> Book:
     if not(check_book_exists(db=db, book=book)):
         book_id = insert_book_db(db=db, book=book)
-        return book_id
+        book_created = read_book_db_by_id(db=db, id=book_id)
+        return book_created
 
     return "Book already exists"
 
