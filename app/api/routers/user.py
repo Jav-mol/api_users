@@ -30,16 +30,20 @@ def get_current_user(token: Annotated[Token, Depends(oauth2)]) -> dict:
     return user 
 
 
-@router.get("", status_code=200)
+@router.get("", status_code=200, response_model=UsersToDict)
 async def get_user(db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
     current_user = read_user_by_username(db=db, username=user.get("sub"))
     return current_user
 
-@router.put("", response_model=UsersToDict)
+
+@router.put("", status_code=200, response_model=UsersToDict)
 async def update_user(user_update: UserCreate, db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):    
-    
     user_updated = service_update_user(id=user["id"], db=db, user=UserUpdate(**user_update.model_dump()))
-    
     user_in_db = read_user_by_username(db=db, username=user_updated.username)
-    
     return user_in_db
+
+
+@router.delete("", status_code=200, response_model=UserOutput)
+async def delete_user(db: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
+    user_deleted = service_dalete_user(user["id"], db=db)
+    return user_deleted

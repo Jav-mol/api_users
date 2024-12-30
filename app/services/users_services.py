@@ -69,7 +69,7 @@ def service_update_user(id: int, db: Collection, user: UserUpdate):
     return UserUpdate(**user_new)
 
 
-def service_dalete_user(id: int, db: Collection) -> int:
+def service_dalete_user(id: int, db: Collection) -> dict:
     if not id_exist(collection=db, id=id):
         raise HTTPException(404,"Id not exist")
     

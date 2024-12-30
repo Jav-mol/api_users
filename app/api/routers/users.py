@@ -43,7 +43,7 @@ async def get_users(db: Annotated[Collection, Depends(get_db_mongo)], user: Anno
     return users
 
 
-@router.get("/{id}", status_code=200)
+@router.get("/{id}", status_code=200, response_model=UsersToDict)
 async def get_user_data(id: int, db_psql: Annotated[Connection,Depends(get_db_psql)], db_mongo: Annotated[Collection, Depends(get_db_mongo)], user: Annotated[dict, Depends(get_current_user)]):
         if not user.get("role") == "admin":
             raise HTTPException(403, "Not authorized")

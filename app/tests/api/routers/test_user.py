@@ -110,5 +110,14 @@ def test_get_user():
 
 def test_update_user():
     response = client.put("/user", json={"username":"Javier2", "email":"jav2.molh@gmail.com", "password":"1234"})
+    assert response.status_code == 200
     
-    print(response.json())
+    assert response.json()["username"] == "Javier2"
+
+
+def test_delete_user():
+    response = client.delete("user")
+    assert response.status_code == 200
+    assert response.json()["username"] == "Javier"
+
+
