@@ -10,7 +10,7 @@ from db.psql.get_db import get_db_psql
 
 from services.users_services import service_dalete_user, read_user_by_username, service_update_user
 from services.users_books_services import read_user_book_by_id
-from services.books_services import create_book
+from services.books_services import create_book, delete_book
 
 from crud.users_books import delete_user_book, get_books_by_id_user
 
@@ -63,6 +63,11 @@ async def create_book_router(book: Book, user: Annotated[dict, Depends(get_curre
     return book[0]
 
 
-@router.delete("/books", status_code=200)
-async def delete_book_router():
-    pass
+@router.delete("/books/{id}", status_code=200)
+async def delete_book_router(id: int, user: Annotated[dict, Depends(get_current_user)], db_psql: Annotated[Connection, Depends(get_db_psql)]):
+    book_deleted = delete_book(db=db_psql, id=id) 
+    
+    return book_deleted
+
+
+
