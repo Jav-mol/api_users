@@ -136,4 +136,11 @@ def test_create_books_current_user():
 
 def test_delete_book():
     response = client.delete(f"/user/books/{1}")
+    
+    assert response.json()["id"] == 1
+    assert response.json()["title"] == "Los Miserables"
+
+
+def test_update_book():
+    response = client.put(f"/user/books/{1}")
     print(response.json())

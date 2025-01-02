@@ -69,6 +69,9 @@ async def delete_book_router(id: int, user: Annotated[dict, Depends(get_current_
     return book_deleted[0]
 
 
-
-
+@router.put("/books/{id}", status_code=200)
+async def update_book_by_id(id: int, user: Annotated[dict, Depends(get_current_user)], db_psql: Annotated[Connection, Depends(get_db_psql)]):
+    books = get_books_by_id_user(db=db_psql, user_id=user["id"])
+    ids_books = [id_book["id"] for id_book in books]
+    return ids_books
 
