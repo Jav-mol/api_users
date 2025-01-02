@@ -63,11 +63,12 @@ async def create_book_router(book: Book, user: Annotated[dict, Depends(get_curre
     return book[0]
 
 
-@router.delete("/books/{id}", status_code=200)
+@router.delete("/books/{id}", status_code=200, response_model=Book)
 async def delete_book_router(id: int, user: Annotated[dict, Depends(get_current_user)], db_psql: Annotated[Connection, Depends(get_db_psql)]):
-    book_deleted = delete_book(db=db_psql, id=id) 
-    
-    return book_deleted
+    book_deleted = delete_book(db=db_psql, id=id)
+    return book_deleted[0]
+
+
 
 
 

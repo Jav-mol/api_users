@@ -130,5 +130,10 @@ def test_get_books_current_user():
 
 def test_create_books_current_user():
     response = client.post("/user/books", json={"title":"book1", "author":"author1"})
-    print()
-    pprint(response.json(), sort_dicts=False)
+    assert response.json()["id"] == 11
+    assert response.json()["title"] == "book1"
+
+
+def test_delete_book():
+    response = client.delete(f"/user/books/{1}")
+    print(response.json())

@@ -34,8 +34,8 @@ def test_create_book_success(connection: Connection, books_list):
     result = create_book(db=connection, book=Book(**books_list[0]))
     result2 = create_book(db=connection, book=Book(**books_list[1]))
     
-    assert result == 1
-    assert result2 == 2
+    assert result[0]["id"] == 1
+    assert result2[0]["id"] == 2
 
 
 def test_create_book_fail(connection: Connection, books_list):
