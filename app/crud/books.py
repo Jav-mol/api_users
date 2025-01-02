@@ -26,3 +26,9 @@ def read_book_db_by_id(db: Connection, id: int) -> list[tuple]:
 def delete_book_db(db: Connection, id_book: int) -> int:
     book_deleted = db.execute(books.delete().where(books.c.id == id_book))
     return book_deleted.rowcount
+
+
+def update_book_db(db: Connection, id_book: int, book_new: dict):
+    db.execute(books.update().values(title=book_new["title"], author=book_new["author"]).where(books.c.id ==id_book))
+    book_updated = read_book_db_by_id(db=db, id=id_book)
+    return book_updated
