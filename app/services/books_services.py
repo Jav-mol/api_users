@@ -31,10 +31,11 @@ def delete_book(db: Collection, id: int):
     return book_deleted
 
 
-def update_book_service(db: Collection, id: int, book: Book):
-    books = get_books_by_id_user(db=db, user_id=id)
+def update_book_service(db: Collection, id_user: int, id_book: int, book: Book):
+    books = get_books_by_id_user(db=db, user_id=id_user)
     ids_books = [id_book["id"] for id_book in books]
-    if not id in ids_books:
+    print(ids_books)
+    if not id_book in ids_books:
         raise HTTPException(401, "Book invalid")
-    book_updated = update_book_db(db=db, id_book=id, book_new=book.model_dump())
+    book_updated = update_book_db(db=db, id_book=id_book, book_new=book.model_dump())
     return book_updated

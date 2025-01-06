@@ -142,5 +142,5 @@ def test_delete_book():
 
 
 def test_update_book():
-    response = client.put(f"/user/books/{1}", json={"title":"book_updated","author":"yo"})
+    response = client.put(f"/user/books/{3}", json={"title":"book_updated","author":"yo"})
     print(response.json())
