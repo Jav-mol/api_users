@@ -7,7 +7,7 @@ from crud.books import insert_book_db
 from crud.books import delete_book_db
 from crud.books import update_book_db
 
-from crud.users_books import delete_user_book, get_books_by_id_user
+from crud.users_books import delete_user_book, get_books_by_id_user, read_users_books_by_book_id
 
 
 def create_book(db: Collection, book: Book) -> list:
@@ -22,12 +22,18 @@ def create_book(db: Collection, book: Book) -> list:
 def read_books(db: Collection) -> list[tuple]:
     return read_books_db(db=db)
 
+from pprint import pprint
 
 def delete_book(db: Collection, id: int):
     book_deleted = read_book_db_by_id(db=db, id=id)
     if not book_deleted: 
         raise ValueError("Id not found")
     delete_book_db(db=db, id_book=id)
+    
+    book_ids = read_users_books_by_book_id(db=db, book_id=id)
+    
+    pprint(book_ids)
+    
     return book_deleted
 
 

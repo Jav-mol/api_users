@@ -11,7 +11,12 @@ def insert_user_book_db(db: Connection, user_book: UserBook) -> int:
 
 def read_users_books_by_user_id(db: Connection, user_id: int) -> list:
     users_books_db = db.execute(select(users_books, books.c.title).join(books, users_books.c.book_id == books.c.id).where(users_books.c.user_id == user_id)).mappings()
+    
+    return [user_book for user_book in users_books_db]
 
+
+def read_users_books_by_book_id(db: Connection, book_id: int) -> list:
+    users_books_db = db.execute(select(users_books).where(users_books.c.book_id == book_id)).mappings()
     return [user_book for user_book in users_books_db]
 
 
