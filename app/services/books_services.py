@@ -22,25 +22,22 @@ def create_book(db: Collection, book: Book) -> list:
 def read_books(db: Collection) -> list[tuple]:
     return read_books_db(db=db)
 
-from pprint import pprint
 
 def delete_book(db: Collection, id: int):
+    book_ids = read_users_books_by_book_id(db=db, book_id=id)
+    if len(book_ids) != 1:
+        raise HTTPException(401, "the book can not remove")
+    
     book_deleted = read_book_db_by_id(db=db, id=id)
     if not book_deleted: 
         raise ValueError("Id not found")
     delete_book_db(db=db, id_book=id)
-    
-    book_ids = read_users_books_by_book_id(db=db, book_id=id)
-    
-    pprint(book_ids)
-    
     return book_deleted
 
 
 def update_book_service(db: Collection, id_user: int, id_book: int, book: Book):
     books = get_books_by_id_user(db=db, user_id=id_user)
     ids_books = [id_book["id"] for id_book in books]
-    print(ids_books)
     if not id_book in ids_books:
         raise HTTPException(401, "Book invalid")
     book_updated = update_book_db(db=db, id_book=id_book, book_new=book.model_dump())

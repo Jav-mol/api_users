@@ -56,7 +56,6 @@ def get_current_user_override():
     access_token = get_access_token(data=data)
     token = Token(access_token=access_token)
     user = get_current_user(token)
-    
     return user
 
 
@@ -66,10 +65,8 @@ def get_db_psql_override_2():
     with db as connect:       
         for user_book in users_books_list:
             insert_user_book_db(db=connect, user_book=UserBook(**user_book))
-        
         for book in books:
             insert_book_db(db=connect, book=Book(**book))
-
         yield connect
 
 
@@ -95,6 +92,7 @@ users_books_list = [
                 {"book_id":4,"user_id":3},
                 {"book_id":7,"user_id":1},
                 {"book_id":9,"user_id":1},
+                {"book_id":9,"user_id":2},
                 {"book_id":5,"user_id":3}
             ]
 
@@ -134,13 +132,26 @@ def test_create_books_current_user():
     assert response.json()["title"] == "book1"
 
 
-def test_delete_book():
-    response = client.delete(f"/user/books/{1}")
-    
-    assert response.json()["id"] == 1
-    #assert response.json()["title"] == "Los Miserables"
+def test_delete_book_sucess():
+    response = client.delete(f"/user/books/{2}")
+    assert response.json()["id"] == 2
+    assert response.status_code == 200
 
 
-def test_update_book():
+def test_delete_book_fail():
+    response = client.delete(f"/user/books/{9}")    
+    assert response.json() == {'detail': 'the book can not remove'}
+    assert response.status_code == 401
+
+
+def test_update_book_fail():
     response = client.put(f"/user/books/{3}", json={"title":"book_updated","author":"yo"})
-    print(response.json())
+    assert response.json() == {'detail': 'Book invalid'}
+    assert response.status_code == 401
+
+
+def test_update_book_success():
+    response = client.put(f"/user/books/{2}", json={"title":"book_updated","author":"yo"})
+    assert response.json()[0]["id"] == 2
+    assert response.json()[0]["title"] == "book_updated"
+    assert response.status_code == 200
