@@ -37,3 +37,16 @@ def get_current_user(token: Annotated[Token, Depends(oauth2)]) -> dict:
 async def get_all_books(db: Annotated[Connection, Depends(get_db_psql)]):
     books = read_books(db=db)
     return books
+
+
+
+@router.delete("/{id}", status_code=200, response_model=BookDate)
+async def delete_user(id: int, db_psql: Annotated[Connection, Depends(get_db_psql)], user: Annotated[dict, Depends(get_current_user)]):
+    if not user.get("role") == "admin":
+        raise HTTPException(403, "Not authorized")
+    
+    book_deleted = delete_book(db=db_psql, id=id)
+    
+    #print(book_deleted)
+    
+    return book_deleted[0]
