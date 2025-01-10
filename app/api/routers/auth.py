@@ -14,7 +14,7 @@ class Token(BaseModel):
     token_type: str = "bearer"
 
 
-router = APIRouter()
+router = APIRouter(tags=["Auth"])
 #oauth2 = OAuth2PasswordBearer(tokenUrl="login")
 
 

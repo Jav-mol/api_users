@@ -20,13 +20,12 @@ from utils.security import decode_token
 oauth2 = OAuth2PasswordBearer(tokenUrl="login")
 
 router = APIRouter(
-    prefix="/users"
+    prefix="/users",
+    tags=["Users"]
 )
 
-def get_current_user(token: Annotated[Token, Depends(oauth2)]) -> dict:
-    token_dict = token.model_dump()
-    data = token_dict.get("access_token") 
-    user = decode_token(data)
+def get_current_user(token: Annotated[str, Depends(oauth2)]) -> dict:
+    user = decode_token(token)
     return user 
 
 

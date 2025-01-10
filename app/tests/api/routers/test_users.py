@@ -2,11 +2,9 @@ from fastapi.testclient import TestClient
 from fastapi import FastAPI
 from pprint import pprint 
 
-
-from api.routers.users import router
-
 from api.routers.auth import Token
-from api.routers.users import  get_current_user
+from api.routers.users import  get_current_user, router
+
 from schemas.users import UserCreate, UserDB, UserOutput
 from services.users_services import service_create_user
 from db.mongodb.get_db import get_db_mongo, get_db_mongo_override
@@ -15,12 +13,11 @@ from db.psql.get_db import get_db_psql, get_db__psql_override
 from schemas.books import Book
 from schemas.users_books import UserBook
 
-
 from crud.users_books import insert_user_book_db
 from crud.books import insert_book_db
 
-
 import pytest
+
 
 app = FastAPI()
 app.include_router(router)
@@ -106,6 +103,10 @@ app.dependency_overrides[get_db_psql] = get_db_psql_override_2
 def test_user():
     user = UserCreate(username="Javi", password="1234", email="Jav@gmail.com")
     return user.model_dump()
+
+
+def tes_get_current_user():
+    pass
 
 
 def test_create_user_success(test_user):
