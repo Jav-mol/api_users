@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, inspect
 from core.config import Setting
+from db.psql.models.books import metadata
 import sqlite3
 
 setting = Setting()
@@ -9,18 +10,18 @@ engine = create_engine(url)
 
 def get_db_psql():
     connection = engine.connect()
+    #metadata.create_all(engine)
     try:
         yield connection
         connection.commit()
     except Exception as e:
         connection.rollback()
-        raise f"Error: {e}"
+        raise e
     finally:
         connection.close()
 
 
 from contextlib import contextmanager
-from db.psql.models.books import metadata
 url_test = "sqlite:///:memory:"
 
 
