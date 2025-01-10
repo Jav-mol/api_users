@@ -39,14 +39,25 @@ async def get_all_books(db: Annotated[Connection, Depends(get_db_psql)]):
     return books
 
 
+@router.post("", response_model=Book)
+async def router_create_book(book: Book, db_psql: Annotated[Connection, Depends(get_db_psql)], user: Annotated[dict, Depends(get_current_user)]):
+    if not user.get("role") == "admin":
+        raise HTTPException(403, "Not authorized")
+    book = create_book(db=db_psql, book=book)
+    return book[0]
+
 
 @router.delete("/{id}", status_code=200, response_model=BookDate)
 async def delete_user(id: int, db_psql: Annotated[Connection, Depends(get_db_psql)], user: Annotated[dict, Depends(get_current_user)]):
     if not user.get("role") == "admin":
         raise HTTPException(403, "Not authorized")
-    
     book_deleted = delete_book(db=db_psql, id=id)
-    
-    #print(book_deleted)
-    
     return book_deleted[0]
+
+
+@router.put("/{id}", status_code=200)
+async def update_book_by_id(id: int, book: Book, user: Annotated[dict, Depends(get_current_user)], db_psql: Annotated[Connection, Depends(get_db_psql)]):
+    if not user.get("role") == "admin":
+        raise HTTPException(403, "Not authorized")
+    book_updated = update_book_service(db=db_psql, id_book=id, id_user=user.get("id"), book=book)
+    return book_updated

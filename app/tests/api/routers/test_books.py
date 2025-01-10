@@ -76,14 +76,32 @@ app.dependency_overrides[get_current_user] = get_current_user_override
 app.dependency_overrides[get_db_psql] = get_db_psql_override_2
 
 
-
 def test_get_all_books():
     response = client.get("/books")
     assert response.status_code == 200
     assert len(response.json()) ==10
 
 
+def test_create_book():
+    response = client.post("/books", json={"title":"book1", "author":"author1"})
+    assert response.json()["id"] == 11
+    assert response.json()["title"] == "book1"
+
+
 def test_delete_book():
     response = client.delete(f"/books/{2}") 
     assert response.json()["id"] == 2
     assert response.status_code == 200
+
+
+def test_update_book_success():
+    response = client.put(f"/books/{2}", json={"title":"book_updated","author":"yo"})
+    assert response.json()[0]["id"] == 2
+    assert response.json()[0]["title"] == "book_updated"
+    assert response.status_code == 200
+
+
+def test_update_book_fail():
+    response = client.put(f"/books/{3}", json={"title":"book_updated","author":"yo"})
+    assert response.json() == {'detail': 'Book invalid'}
+    assert response.status_code == 401

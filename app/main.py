@@ -1,11 +1,15 @@
 from fastapi import FastAPI
-from api.routers.users import router
-# ..
+from api.routers.users import router as router_users
+from api.routers.auth import router as router_auth
+from api.routers.books import router as router_books
+from api.routers.user import router as router_user
+
 app = FastAPI()
 
-app.include_router(router)
-
-
+app.include_router(router_users)
+app.include_router(router_auth)
+app.include_router(router_books)
+app.include_router(router_user)
 
 
 "ctrl + o / enter / ctrl + x"
