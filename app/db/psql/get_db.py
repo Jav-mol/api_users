@@ -1,12 +1,16 @@
+
 from sqlalchemy import create_engine, inspect
 from core.config import Setting
 from db.psql.models.books import metadata
 import sqlite3
 
+from contextlib import contextmanager
+
 setting = Setting()
 
 url = setting.url_db_psql
 engine = create_engine(url)
+
 
 def get_db_psql():
     connection = engine.connect()
@@ -21,7 +25,6 @@ def get_db_psql():
         connection.close()
 
 
-from contextlib import contextmanager
 url_test = "sqlite:///:memory:"
 
 

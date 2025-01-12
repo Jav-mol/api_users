@@ -25,7 +25,7 @@ client = TestClient(app)
 
 
 users = [
-    {"username": "Javier", "password": "1234", "email": "javi@gmail.com"},
+    {"username": "Javi", "password": "1234", "email": "javi@gmail.com"},
     {"username": "Azul", "password": "4321", "email": "azul@gmail.com"},
     {"username": "Lucas", "password": "pass5678", "email": "lucas@hotmail.com"},
     {"username": "Martina", "password": "martina2024", "email": "martina@yahoo.com"},
