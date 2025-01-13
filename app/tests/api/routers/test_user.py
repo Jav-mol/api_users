@@ -53,8 +53,7 @@ def db_mongo_override():
 
 def get_current_user_override():
     data = {"sub":"Javier", "role":"user", "id":1}
-    access_token = get_access_token(data=data)
-    token = Token(access_token=access_token)
+    token = get_access_token(data=data)
     user = get_current_user(token)
     return user
 

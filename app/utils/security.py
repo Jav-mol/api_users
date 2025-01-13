@@ -1,9 +1,14 @@
+from fastapi import HTTPException, Depends, status
+from fastapi.security import OAuth2PasswordBearer
+
 from datetime import datetime, timedelta, timezone
-from fastapi import HTTPException, status
 from core.config import Setting
+from typing import Annotated
 
 import jwt
 import bcrypt
+
+oauth2 = OAuth2PasswordBearer(tokenUrl="login")
 
 setting = Setting()
 
@@ -31,3 +36,8 @@ def decode_token(token: str):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Token")
     return data 
+
+
+def get_current_user(token: Annotated[str, Depends(oauth2)]) -> dict:
+    user = decode_token(token)
+    return user

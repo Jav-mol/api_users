@@ -25,7 +25,7 @@ client = TestClient(app)
 
 
 users = [
-    {"username": "Javi", "password": "1234", "email": "javi@gmail.com"},
+    {"username": "Javier", "password": "1234", "email": "javi@gmail.com"},
     {"username": "Azul", "password": "4321", "email": "azul@gmail.com"},
     {"username": "Lucas", "password": "pass5678", "email": "lucas@hotmail.com"},
     {"username": "Martina", "password": "martina2024", "email": "martina@yahoo.com"},
@@ -49,10 +49,8 @@ from utils.security import get_access_token
 
 
 def get_current_user_override():
-    data = {"sub":"Javier", "role":"admin"}
-    access_token = get_access_token(data=data)
-    
-    token = Token(access_token=access_token)
+    data = {"sub":"Javier", "role":"admin", "id":1}
+    token = get_access_token(data=data)    
     user = get_current_user(token)
     
     return user
@@ -112,7 +110,7 @@ def tes_get_current_user():
 def test_create_user_success(test_user):
     response = client.post("/users", json=test_user)
     assert response.json()["id"] == 11
-    assert response.json()["username"] == "Javi"
+    assert response.json()["username"] == "Javier2"
 
 
 def test_create_user_fail():
