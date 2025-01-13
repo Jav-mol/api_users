@@ -101,7 +101,7 @@ app.dependency_overrides[get_db_psql] = get_db_psql_override_2
 
 @pytest.fixture
 def test_user():
-    user = UserCreate(username="Javi", password="1234", email="Jav@gmail.com")
+    user = UserCreate(username="Javier2", password="1234", email="Jav@gmail.com")
     return user.model_dump()
 
 
