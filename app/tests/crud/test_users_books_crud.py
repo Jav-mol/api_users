@@ -1,7 +1,7 @@
 from db.psql.get_db import get_db__psql_override
 
 from crud.users_books import insert_user_book_db
-from crud.users_books import read_users_books_by_user_id, check_user_book_exist
+from crud.users_books import read_users_books_by_user_id, check_user_book_exist, read_users_books_by_book_id, get_books_by_id_user
 from crud.users_books import delete_user_book
 
 from crud.books import insert_book_db
@@ -73,3 +73,8 @@ def test_check_user_book_exist(connection: Connection):
 def test_delete_user_book(connection: Connection):
     user_book_deleted = delete_user_book(db=connection, user_id=1)
     assert user_book_deleted == 2
+
+
+def test_get_books_by_id_user(connection: Connection):
+    books = get_books_by_id_user(db=connection, user_id=1)
+    assert len(books) == 2 

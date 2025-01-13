@@ -52,7 +52,8 @@ async def delete_user(db: Annotated[Collection, Depends(get_db_mongo)], user: An
 
 @router.get("/books", status_code=200, response_model=list[Book])
 async def get_all_book_for_user(user: Annotated[dict, Depends(get_current_user)], db_psql: Annotated[Connection, Depends(get_db_psql)]):
-    books = get_books_by_id_user(db=db_psql, user_id=user["id"])
+    print(user.get("id"))
+    books = get_books_by_id_user(db=db_psql, user_id=user.get("id"))
     return books
 
 

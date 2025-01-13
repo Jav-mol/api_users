@@ -37,7 +37,7 @@ def read_user_book_by_id(db_mongo: Collection, db_psql: Connection, id_user: int
     user_db["books"] = books
 
     user_book = UserBookDict(**user_db)
-
+    
     return user_book
 
 
