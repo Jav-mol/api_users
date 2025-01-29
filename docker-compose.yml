@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+    my-api:
+        image: myapi-fastapi
+        container_name: myapp
+        build: .
+        ports:
+            - "8000:8000"

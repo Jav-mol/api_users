@@ -16,7 +16,7 @@ iniconfig==2.0.0
 mongomock==4.2.0.post1
 packaging==24.1
 pluggy==1.5.0
-psycopg2==2.9.9
+psycopg2-binary==2.9.9
 pycparser==2.22
 pydantic==2.9.0
 pydantic-settings==2.4.0
